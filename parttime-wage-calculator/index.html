@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>시급제(일급제) 근로계약자 인건비 소요액 계산기</title>
+
+  <link rel="icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="./script.js" defer></script>
+
+  <style>
+    body{
+      font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;
+      background:#fff;
+      color:#222;
+      margin:0;
+      padding:0;
+    }
+    main{
+      max-width:720px;
+      margin:20px auto;
+      padding:0 16px 32px;
+    }
+    h1{
+      font-size:1.5rem;
+      margin-bottom:16px;
+      text-align:center;
+    }
+
+    .section{
+      border:1px solid #e5e5e5;
+      border-radius:12px;
+      padding:16px 18px;
+      background:#fafafa;
+    }
+    .field-row{
+      margin-bottom:14px;
+    }
+    label{
+      font-weight:600;
+      display:block;
+      margin-bottom:6px;
+    }
+
+    input[type="number"],
+    input[type="date"],
+    input[type="time"]{
+      box-sizing:border-box;
+      padding:8px 10px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:15px;
+    }
+    input[type="number"],
+    input[type="date"]{
+      width:100%;
+    }
+
+    textarea{
+      width:100%;
+      box-sizing:border-box;
+      padding:8px 10px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:15px;
+      resize:vertical;
+      min-height:70px;
+    }
+
+    .days-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .day-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border:1px solid #e6e6e6;
+      border-radius:10px;
+      background:#fff;
+      padding:8px 10px;
+    }
+    .day-left{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:600;
+    }
+    .day-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:210px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    .hours-group input[type="number"]{
+      width:90px;
+    }
+    .range-group{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .range-group input[type="time"]{
+      width:100px;
+    }
+
+    /* 모드별 표시 전환 */
+    body.mode-hours .hours-group{display:flex;}
+    body.mode-hours .range-group{display:none;}
+
+    body.mode-range .hours-group{display:none;}
+    body.mode-range .range-group{display:flex;}
+
+    .hint{
+      color:#666;
+      font-size:.85rem;
+      margin-top:6px;
+    }
+
+    .mode-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      font-size:0.95rem;
+      align-items:center;
+    }
+    .mode-row label{
+      font-weight:400;
+      margin:0;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    button{
+      display:block;
+      width:100%;
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #111;
+      background:#111;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      font-size:1rem;
+      margin-top:4px;
+    }
+    button:hover{
+      opacity:.9;
+    }
+
+    .result-box{
+      background:#f8f8f8;
+      border-radius:10px;
+      padding:14px;
+      margin-top:18px;
+      line-height:1.6;
+    }
+    .result-box span{
+      font-weight:bold;
+      font-size:1.05rem;
+    }
+
+    hr{
+      border:none;
+      border-top:1px solid #e5e5e5;
+      margin:10px 0;
+    }
+
+    .btn-home{
+      display:inline-block;
+      margin-top:20px;
+      padding:8px 16px;
+      border:1px solid #111;
+      border-radius:10px;
+      background:#111;
+      color:#fff;
+      font-weight:600;
+      text-decoration:none;
+      text-align:center;
+    }
+    .btn-home:hover{
+      opacity:.9;
+    }
+
+    footer{
+      text-align:center;
+      margin-top:24px;
+      color:#555;
+      font-size:.85rem;
+      line-height:1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>시급제(일급제) 근로계약자 인건비 소요액 계산기</h1>
+
+    <p class="muted">
+      ·학교회계 예산편성 지침: 대체인력 등 일용직 단가 일당 89,600원 (시급 11,200원) 반영함.
+    </p>
+    
+    
+    
+    <div class="section">
+      <!-- 기간 -->
+      <div class="field-row">
+        <label for="startDate">근로계약 시작일자</label>
+        <input type="date" id="startDate" />
+      </div>
+
+      <div class="field-row">
+        <label for="endDate">근로계약 종료일자</label>
+        <input type="date" id="endDate" />
+      </div>
+
+      <!-- 시급 -->
+      <div class="field-row">
+        <label for="hourlyWage">시급 (원단위)</label>
+        <input type="number" id="hourlyWage" value="11200" />
+      </div>
+
+      <!-- 입력 방식 선택 -->
+      <div class="field-row">
+        <label>요일별 근무시간 입력 방식</label>
+        <div class="mode-row">
+          <label>
+            <input type="radio" name="timeInputMode" value="hours" checked />
+            시간(예: 4.5시간)
+          </label>
+          <label>
+            <input type="radio" name="timeInputMode" value="range" />
+            시각(예: 09:30 ~ 14:00)
+          </label>
+        </div>
+        <div class="hint">
+          입력 방식은 한 번에 하나만 사용됩니다. (모드를 바꾸면 직접 다시 확인·수정해 주세요)
+        </div>
+      </div>
+
+      <!-- 요일별 소정 근로시간 -->
+      <div class="field-row">
+        <label>
+          요일별 소정 근로시간
+          <span style="font-weight:500;">· 기본값: 월~금 4시간</span>
+        </label>
+
+        <div class="days-grid">
+          <!-- 월 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="mon" checked />
+              <span>월</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="monHours" step="0.5" value="4" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="monStart" value="09:00" />
+                <span>~</span>
+                <input type="time" id="monEnd" value="13:00" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 화 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="tue" checked />
+              <span>화</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="tueHours" step="0.5" value="4" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="tueStart" value="09:00" />
+                <span>~</span>
+                <input type="time" id="tueEnd" value="13:00" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 수 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="wed" checked />
+              <span>수</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="wedHours" step="0.5" value="4" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="wedStart" value="09:00" />
+                <span>~</span>
+                <input type="time" id="wedEnd" value="13:00" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 목 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="thu" checked />
+              <span>목</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="thuHours" step="0.5" value="4" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="thuStart" value="09:00" />
+                <span>~</span>
+                <input type="time" id="thuEnd" value="13:00" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 금 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="fri" checked />
+              <span>금</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="friHours" step="0.5" value="4" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="friStart" value="09:00" />
+                <span>~</span>
+                <input type="time" id="friEnd" value="13:00" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 토 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="sat" />
+              <span>토</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="satHours" step="0.5" value="0" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="satStart" />
+                <span>~</span>
+                <input type="time" id="satEnd" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 일 -->
+          <div class="day-item">
+            <div class="day-left">
+              <input type="checkbox" id="sun" />
+              <span>일</span>
+            </div>
+            <div class="day-right">
+              <div class="hours-group">
+                <input type="number" id="sunHours" step="0.5" value="0" />
+                <span>시간</span>
+              </div>
+              <div class="range-group">
+                <input type="time" id="sunStart" />
+                <span>~</span>
+                <input type="time" id="sunEnd" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint">
+          체크 해제 시 해당 요일은 근무하지 않는 것으로 처리됩니다.
+          휴게시간은 아래 옵션으로 일괄 차감합니다.
+        </div>
+      </div>
+
+      <!-- 휴게시간 -->
+      <div class="field-row">
+        <label for="breakMinutes">휴게시간 반영 (분단위)</label>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <input
+            type="number"
+            id="breakMinutes"
+            min="0"
+            step="5"
+            value="30"
+            style="width:100px;"
+          />
+          <label style="display:flex; align-items:center; gap:6px;">
+            <span>차감</span>
+            <input type="checkbox" id="breakEnabled" />
+          </label>
+        </div>
+        <div class="hint">
+          예: 하루 4시간 근로, 휴게 30분 → 유급시간 3.5시간으로 계산.
+        </div>
+      </div>
+
+      <!-- 공휴일·추가 제외일 -->
+      <div class="field-row">
+        <label for="excludeDates">추가 제외일</label>
+        <textarea
+          id="excludeDates"
+          placeholder="예: 2025-01-27, 2025-02-10&#10;쉼표(,) 또는 줄바꿈으로 여러 날짜 입력"
+        ></textarea>
+        <div class="hint">
+          양력 공휴일만 자동으로 제외되고, 음력 공휴일이랑 기타 휴일은 직접 입력해야 함.
+        </div>
+
+        <div style="margin-top:8px;">
+          <label style="font-weight:400; display:flex; align-items:center; gap:6px;">
+            <input type="checkbox" id="autoHoliday" checked />
+            <span>대한민국 관공서 공휴일 자동 반영 </span>
+          </label>
+          <div class="hint">
+            설·추석, 삼일절, 어린이날, 현충일, 광복절, 개천절, 한글날, 성탄절 등은 별도 입력 없이 제외일로 처리
+          </div>
+        </div>
+      </div>
+
+      <!-- 예산(기본급 / 주휴수당 분리) -->
+      <div class="field-row">
+        <label for="budgetBase">예산(기본급) – 원단위</label>
+        <input type="number" id="budgetBase" placeholder="예: 700000" />
+      </div>
+
+      <div class="field-row">
+        <label for="budgetJhu">예산(주휴수당) – 원단위</label>
+        <input type="number" id="budgetJhu" placeholder="예: 300000" />
+      </div>
+
+      <!-- 버튼 -->
+      <button id="btnCalc">계산하기</button>
+
+      <!-- 결과 -->
+      <div class="result-box">
+        <div id="outDaysLine" style="margin-bottom:8px; font-weight:600; color:#333;"></div>
+
+        <div>주 소정 근무시간 합계 (휴게 전): <span id="outWeeklyRaw">0</span> 시간</div>
+        <div>주 소정 근무시간 합계 (유급 기준): <span id="outWeeklyPaid">0</span> 시간</div>
+
+        <hr />
+
+        <div>기본급: <span id="outBase">0</span> 원</div>
+        <div>주휴수당: <span id="outJhu">0</span> 원</div>
+
+        <hr />
+
+        <div>총 지급액(기본급+주휴수당): <span id="outTotal">0</span> 원</div>
+
+        <div style="margin-top:8px;">
+          기본급 예산 잔액: <span id="outRemainBase">0</span> 원<br />
+          주휴수당 예산 잔액: <span id="outRemainJhu">0</span> 원
+        </div>
+
+        <div id="outMsg" style="color:#555; font-size:0.9rem; margin-top:6px;"></div>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="/" class="btn-home">메인으로 돌아가기</a>
+      </div>
+    </div>
+
+<footer style="text-align:center; margin-top:15px; color:#444;">
+  제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+</footer>
+  </main>
+   <script src="/static/global-loader.js?v=1"></script>
+  
+</body>
+</html>
+
+
+
+

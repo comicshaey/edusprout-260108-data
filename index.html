@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>교육행정 업무 효율화 지원 웹페이지</title>
+
+  <link rel="icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+
+  <style>
+    .btn-desc{font-size:0.9rem; margin:6px 0 18px 0; color:#333}
+    .section{border:1px solid #e5e5e5; border-radius:12px; padding:16px 18px; margin:18px 0;}
+    .btn{display:inline-block; padding:10px 16px; border-radius:12px; border:1px solid #222; text-decoration:none; color:#111; font-weight:600;}
+    .btn + .btn{margin-left:10px}
+    body{color:#111;background:#fff; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Noto Sans KR","맑은 고딕",sans-serif}
+    h1{font-size:1.75rem; margin:18px 0 8px}
+    .subtitle{margin:0 0 12px; color:#444; font-size:0.98rem}
+    .muted{color:#555; font-size:0.95rem}
+    footer{margin:40px 0 20px; color:#333}
+
+    hr{
+      border:none;
+      border-top:1px solid #ddd;
+      margin:28px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container" style="max-width:880px; margin:0 auto; padding:24px 16px;">
+
+    <h1>교육행정 업무 효율화 지원 웹페이지</h1>
+    <p class="subtitle">부제: 제작·운영 — 씩씩하고 귀여운 고주무관</p>
+
+    <p class="muted">
+      ·학교 행정 업무 수행 과정에서 반복되는 산출·정리 업무를 구조화하여, 업무 효율성과 정확성을 높이기 위해 설계·제작한 지원 페이지입니다.<br/>
+      ·현재는 서버/클라우드 연동 없이 계산·정리 기능 중심으로 운영 중이며, 업무 여건이 허용되는 범위 내에서 단계적으로 고도화할 예정입니다.<br/>
+    </p>
+
+    <hr />
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">주요 분야</h2>
+      <p class="muted">※ 현재 업무분장 중 서식·계산 도구화가 가장 효과적인 영역은 ‘인건비’ 분야로 판단하여 우선 구성했습니다.</p>
+      <hr />
+      <p>
+        ·급여: 각종 인건비성 지출 (사회보험, 원천세 등 포함) <br/>
+        ·계약: 학교장임용 직원 관련 인사·계약 <br/>
+        ·범위: 학교장임용 근로계약자 및 노무제공자, 위촉자 등
+      </p>
+      <p class="muted">
+        - 근로계약자: 교육공무직, 특수운영직군, 학교운동부지도자, 스포츠강사, 계약제교원, 대체인력 등 <br/>
+        - 노무제공자: 방과후강사, 유치원 특성화강사 등 <br/>
+        - 위촉자: 협력교사, 배움터지킴이, 은빛지킴이, 특수교육 통학지원 봉사자 등 <br/>
+      </p>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <!-- 교육공무직 인건비 관련 기능 -->
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">교육공무직 인건비 관련</h2>
+      <hr />
+
+      <div>
+        <a class="btn" href="/ordinary-wage/">교육공무직 통상임금 계산기</a>
+        <div class="btn-desc">·직종별 보수표 반영 (완성도 괜찮음. 베타 테스트 가능)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/vacation-weekly-holiday-wage/">조리종사원 및 청소원 방학근무 인건비 일할 계산기</a>
+        <div class="btn-desc">·방학중 근무수당, 주휴수당 등 산출식 (덜 만듦. 추가 작업 필요)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/cook-industrial-safety-education-pay/">조리종사원 산업안전보건교육비 계산기</a>
+        <div class="btn-desc">·방학중 집체교육비, 학기중 온라인 교육비 (완성도 괜찮음. 베타 테스트 가능)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/effect-of-working-during-vacation/">방학중 비상시근로자의 방학근무로 인한 부수적인 영향 계산기</a>
+        <div class="btn-desc">·출근율 산정, 연차 유급휴가 일수 계산, 연말정산, 사회보험료 상승분 등 (대충 만듦. 추가 작업 필요)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/annual-leave-calculator/">복무상황 집계 해드림 (미완)</a>
+        <div class="btn-desc">·나이스 원자료 CSV 파일 올리면 복무 종류별로 집계. pyodide 사용. (덜 만듦. 추가 작업 필요)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/annual-leave/">교육공무직 연차 유급휴가 일수 계산기 (미완)</a>
+        <div class="btn-desc">·C++ 실행 파일과 다른 양식. (대충 만듦. 추가 작업 필요)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/annual-leave-pay/">교육공무직 연차 유급휴가 미사용 수당 계산기 (미완)</a>
+        <div class="btn-desc">·통상임금 계산기는 별도 (대충 만듦. 추가 작업 필요)</div>
+      </div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <!-- 계약제 교원 인건비 등 관련 -->
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">계약제교원 인건비 예산 및 지급 관련</h2>
+      <hr />
+      <a class="btn" href="/preschool-parttime-contract-teacher/">유치원 시간제근무 기간제교원 연간 인건비 소요액 계산기</a>
+      <div class="btn-desc">·학기중 4시간 근무, 방학중 방과후 운영기간은 8시간 근무, 미운영 기간은 4시간 근무. (대충 만듦. 추가 작업 필요)</div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <!-- 학교운동부지도자 관련 -->
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">학교운동부지도자, 스포츠강사 관련</h2>
+      <hr />
+
+      <div>
+        <a class="btn" href="/user-fee-ratio/">운동부지도자 수익자부담금 비율 계산기</a>
+        <div class="btn-desc">·전액 지급이 아닌 경우, 순환함수에 빠져서 수치해석으로 근사치 구함. (완성도 괜찮음. 베타 테스트 가능)</div>
+      </div>
+
+      <a class="btn" href="/sports-contract-teacher-budget-calculator/">스포츠강사 연간 인건비 소요액 계산기</a>
+      <div class="btn-desc">·2025회계 기준 (대충 만듦. 추가 작업 필요)</div>
+
+      <a class="btn" href="/dc-retirement/">DC형 퇴직연금 소요액 계산기</a>
+      <div class="btn-desc">·학교운동부지도자, 스포츠강사, 특수운영직군 등. 회계연도 선택 가능 (완성도 대충 중간쯤. 추가 작업 필요.)</div>
+
+      <div>
+        <a class="btn" href="/wage-ledger-2025/">학교장 임용권자 2025 임금대장</a>
+        <div class="btn-desc">·엑셀 파일로 변환 저장 가능하게. (추가 작업 필요. 동적 페이지로 변경 및 서버 연결 필요)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/coach-ot/">학교운동부지도자 초과근무수당 계산기</a>
+        <div class="btn-desc">·출장, 훈련 많고 수익자부담금 귀찮은 운동부지도자… (대충 만듦. 추가 작업 필요)</div>
+      </div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <!-- 근로계약자 -->
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">그외 근로계약자 관련</h2>
+      <hr />
+      <div>
+        <a class="btn" href="/parttime-wage-calculator/">시급제(일급제) 근로계약자 인건비 소요액 계산기</a>
+        <div class="btn-desc">·초단시간 및 단시간 근로자 자동 구분됨. (완성도 괜찮음. 베타 테스트 가능)</div>
+      </div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <!-- 기타 미분류 -->
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">기타 미분류 기능</h2>
+      <hr />
+
+      <div>
+        <a class="btn" href="/travel-expenses-verifier/">관내여비 지급내역 검증기</a>
+        <div class="btn-desc">·반일/종일 여부에 따라 1만원/2만원 지급됐는지 CSV 파일 업로드하면 검증 (덜 만듦. 추가 작업 필요)</div>
+      </div>
+
+      <!-- 기능 숨김. 일단 주석 처리
+      <div>
+        <a class="btn" href="/travel-audit/">관내여비 지급 내역 점검기</a>
+        <div class="btn-desc">·번외: 감사관님의 노가다를 줄여보자. (완성도 없음. 동적 페이지로 변경, 클라우드 서버 연결 필요)</div>
+      </div>
+      -->
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <!-- 업무 관련 툴 -->
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">업무 관련 툴 (개발자용)</h2>
+      <hr />
+
+      <div style="margin-bottom:10px">
+        <a class="btn" href="/calendar/">학년도별 업무 일정 모음</a>
+        <div class="btn-desc">·업무 일정 (월간 달력)</div>
+      </div>
+
+      <div>
+        <a class="btn" href="/study-log/">업무 능력 향상 노트</a>
+        <div class="btn-desc">·2025.11.12.(수)~2025.12.31. 남은 과원 배치 기간 동안 업무 공부 많이 해두기</div>
+      </div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">개발자 노트</h2>
+      <hr />
+      <a class="btn" href="/dev-notes/">개발자 노트 보러가기</a>
+      <div class="btn-desc">
+        ·업무 수행 과정에서 관찰한 문제와 개선 아이디어를 기록합니다. <br />
+        ·현장 경험 기반으로 기능 개선 및 자료 정리를 지속합니다. <br />
+      </div>
+
+      <a class="btn" href="/thinking-notes/">이런저런 생각들</a>
+      <div class="btn-desc">·업무와 개발, 기록에 대한 메모</div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <section class="section">
+      <h2 style="font-size:1.2rem; margin:0 0 12px">업데이트 내역 등</h2>
+      <hr />
+      <div>
+        <a class="btn" href="/change-log/">업데이트 진행·예정 내역 정리</a>
+        <div class="btn-desc">·테스트 등의 용이를 위해 업데이트 내역을 정리합니다.</div>
+      </div>
+    </section>
+
+    <!-- ================================ 구분선 ================================ -->
+
+  </main>
+
+  <footer style="text-align:center; margin-top:15px; color:#444;">
+    제작·운영: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인 제작·운영 페이지
+  </footer>
+
+  <script src="/static/disable-copy.js"></script>
+  <script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>

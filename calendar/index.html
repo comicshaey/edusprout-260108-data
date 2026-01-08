@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>학년도별 업무 일정 달력 모음</title>
+  <link rel="icon" href="/static/favicon.ico" />
+  <style>
+    :root{--black:#111}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:#fff;
+      color:#111;
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
+    }
+    .wrap{
+      max-width:880px;
+      margin:24px auto;
+      padding:0 16px;
+    }
+    
+    h1{font-size:1.75rem; margin:18px 0 8px}
+    .muted{color:#555; font-size:0.95rem}
+    footer{margin:40px 0 20px; color:#333}
+
+   hr{
+      border:none;
+      border-top:1px solid #ddd;
+      margin:28px 0;
+     }
+    
+    
+    .desc{
+      color:#555;
+      margin-bottom:14px;
+      font-size:.95rem;
+    }
+    .card{
+      border:1px solid #e5e5e5;
+      border-radius:14px;
+      padding:16px 16px 14px;
+      margin:12px 0;
+    }
+    .btn{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid var(--black);
+      text-decoration:none;
+      color:#fff;
+      background:#111;
+      font-weight:800;
+      font-size:.95rem;
+    }
+    .btn + .btn{
+      margin-left:8px;
+      margin-top:6px;
+    }
+    footer{
+      margin:18px 0 8px;
+      color:#555;
+      font-size:.9rem;
+      text-align:center;
+    }
+
+    @media (max-width:600px){
+      .btn + .btn{
+        margin-left:0;
+        display:inline-block;
+      }
+      .card .btn{
+        margin-bottom:6px;
+      }
+    }
+  </style>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+  
+<body>
+  <div class="wrap">
+  <main class="container" style="max-width:880px; margin:0 auto; padding:24px 16px;">
+    <h1>학년도별 업무 일정 달력 모음</h1>
+
+    <p class="muted">
+      ·개발자가 쓰기 위해 만든 기능임. 서버 DB 연결 없는 웹사이트라서 다른 접속자들은 못 씀. <br/>
+      ·학년도별 (당해년도 3월 ~ 익년도 2월) 일정 관리용 달력 <br/>
+      ·월간 달력으로 큰 흐름을 보고, 주간 달력으로 세부 일정 관리함. <br/>
+    </p>
+<hr/>
+    
+    <!-- 월간 달력 카드 -->
+    <div class="card">
+      <h2 style="font-size:1.1rem;margin:0 0 8px">월간 달력</h2>
+    <p class="muted">
+        ·학년도별 월간 달력. 일요일 시작.
+
+      <hr/>
+      </p>
+      <a class="btn" href="/calendar/calendar-monthly-academic.html?start=2025-11&months=04&title=2025학년도">
+        2025학년도 (4개월)
+      </a>
+      <a class="btn" href="/calendar/calendar-monthly-academic.html?start=2026-03&months=12&title=2026학년도">
+        2026학년도 (12개월)
+      </a>
+      <a class="btn" href="/calendar/calendar-monthly-academic.html?start=2027-03&months=12&title=2027학년도">
+        2027학년도 (12개월)
+      </a>
+    </div>
+
+    <!-- 주간 달력 카드 -->
+    <div class="card">
+      <h2 style="font-size:1.1rem;margin:0 0 8px">주간 달력</h2>
+    <p class="muted">
+        ·학년도별 주간 일정. 일요일 시작. <br/>
+        ·학년도 기간을 주 단위로 끊음. 날짜 누르면 월간-주간 달력 서로 이동함
+      </p>
+<hr/>
+
+    
+      <!-- 2025학년도: 11~2월 잔여 기간 -->
+
+      <a class="btn"
+        href="/calendar/calendar-weekly-academic.html?start=2025-11-16&weeks=15&title=2025학년도%20주간%20업무%20일정(11~2월)">
+        2025학년도 주간 달력 (11~2월)
+      </a>
+
+
+      <!-- 2026학년도: 3~다음해 2월, 52주 -->
+      <a class="btn"
+        href="/calendar/calendar-weekly-academic.html?start=2026-03-01&weeks=52&title=2026학년도%20주간%20업무%20일정(52주)">
+        2026학년도 주간 달력 (52주)
+      </a>
+
+
+      <!-- 2027학년도: 2027-02-28(일)부터 53주 -->
+      <a class="btn"
+        href="/calendar/calendar-weekly-academic.html?start=2027-02-28&weeks=53&title=2027학년도%20주간%20업무%20일정(53주)">
+        2027학년도 주간 달력 (53주)
+      </a>
+    </div>
+
+    <a class="btn" href="/" style="margin-top:10px;">메인으로 돌아가기</a>
+  </div>
+
+<footer style="text-align:center; margin-top:15px; color:#444;">
+  제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+</footer>
+
+</main>
+
+  <script src="/static/global-loader.js?v=1"></script>
+  
+</body>
+</html>

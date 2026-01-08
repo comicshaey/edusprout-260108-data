@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>스포츠강사 인건비 소요액 계산기 (연단위)</title>
+  <link rel="icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+<div class="shell">
+
+<header class="site-header">
+  <h1>스포츠강사 인건비 소요액 계산기 (연단위)</h1>
+</header>
+
+<main>
+<p class="muted">
+  ·스포츠강사 운영 계획, 표준근로계약서, 교육공무직 업무 편람 및 보수 처리 요령 등 근거로 작성됨.
+</p>
+
+<!-- 1. 기본 정보 -->
+<section class="section">
+  <h2>1. 기본 정보 입력</h2>
+  <div class="grid two">
+    <div>
+      <label>근로계약 시작일</label>
+      <input type="date" id="contractStart" value="2025-03-01" />
+    </div>
+    <div>
+      <label>근로계약 종료일</label>
+      <input type="date" id="contractEnd" value="2026-02-28" />
+    </div>
+    <div>
+      <label>주당 소정 근로시간</label>
+      <input type="number" id="weeklyHours" value="40" />
+      <p class="muted small">·강사 수업량과 무관, 월급제 1유형 적용</p>
+    </div>
+  </div>
+
+  <div style="margin-top:10px;text-align:right;">
+    <button type="button" class="btn-lightgrey" id="btnCalcStep1">이 단계까지 계산하기</button>
+  </div>
+</section>
+
+<!-- 2. 월정 보수 -->
+<section class="section">
+  <h2>2. 월 단위 보수 지급액</h2>
+
+  <div class="grid two">
+    <div>
+      <label>기본급</label>
+      <input type="number" id="basicPay" value="2266000" />
+    </div>
+    <div>
+      <label>정액급식비</label>
+      <input type="number" id="mealAllowance" value="150000" />
+    </div>
+    <div>
+      <label>가족수당</label>
+      <input type="number" id="familyAllowance" value="0" />
+    </div>
+    <div>
+      <label>기타 월정 수당</label>
+      <input type="number" id="otherMonthly" value="0" />
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- 근속수당 -->
+  <label class="label">근속수당</label>
+  <label class="checkbox-inline">
+    <input type="checkbox" id="seniorityChanged" />
+    <span>연도 중 근속연수 변경됨</span>
+  </label>
+
+  <div id="senioritySingleBox" class="grid two" style="margin-top:8px;">
+    <div>
+      <label>근속수당</label>
+      <input type="number" id="senioritySingle" value="0" />
+    </div>
+  </div>
+
+  <div id="senioritySplitBox" class="card" style="display:none;margin-top:8px;">
+    <div class="grid two">
+      <div>
+        <label>기존 근속연수 마지막 월</label>
+        <select id="seniorityChangeMonth">
+          <option value="3">3월</option><option value="4">4월</option><option value="5">5월</option>
+          <option value="6">6월</option><option value="7">7월</option><option value="8">8월</option>
+          <option value="9">9월</option><option value="10">10월</option><option value="11">11월</option>
+          <option value="12" selected>12월</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid two" style="margin-top:6px;">
+      <div>
+        <label>근속수당 (구간 1)</label>
+        <input type="number" id="seniorityBefore" value="0" />
+      </div>
+      <div>
+        <label>근속수당 (구간 2)</label>
+        <input type="number" id="seniorityAfter" value="0" />
+      </div>
+    </div>
+  </div>
+
+  <div class="result" style="margin-top:12px;">
+    <strong>월 보수액 (기준 금액):</strong> <span id="monthlyFixedDisplay">-</span>
+  </div>
+
+  <div style="margin-top:10px;text-align:right;">
+    <button type="button" class="btn-lightgrey" id="btnCalcStep2">이 단계까지 계산하기</button>
+  </div>
+</section>
+
+<!-- 3. 연 단위 지급 -->
+<section class="section">
+  <h2>3. 연 단위 지급 보수</h2>
+
+  <div class="grid two">
+    <div>
+      <label>설 명절휴가비</label><input type="number" id="holiday1Amount" value="925000"/>
+    </div>
+    <div>
+      <label>지급월</label><select id="holiday1Month"><option value="1">1월</option><option value="2">2월</option></select>
+    </div>
+
+    <div>
+      <label>추석 명절휴가비</label><input type="number" id="holiday2Amount" value="925000"/>
+    </div>
+    <div>
+      <label>지급월</label><select id="holiday2Month"><option value="9">9월</option><option value="10">10월</option></select>
+    </div>
+
+    <div>
+      <label>정기상여금 (연)</label><input type="number" id="bonusAmount" value="1000000"/>
+    </div>
+    <div>
+      <label>지급월</label><select id="bonusMonth"><option value="6">6월</option></select>
+    </div>
+
+    <div>
+      <label>맞춤형복지비 (연)</label><input type="number" id="welfareAmount" value="650000"/>
+    </div>
+    <div>
+      <label>지급월</label><select id="welfareMonth"><option value="3">3월</option></select>
+    </div>
+
+    <div>
+      <label>건강검진비 (연)</label><input type="number" id="healthAmount" value="300000"/>
+    </div>
+    <div>
+      <label>당해년도 지급 여부 / 지급월</label>
+      <input type="checkbox" id="healthUse" checked />
+      <select id="healthMonth"><option value="7">7월</option></select>
+    </div>
+  </div>
+
+  <div class="result">
+    <strong>연 단위 지급 보수 합계:</strong> <span id="annualExtrasDisplay">-</span>
+  </div>
+
+  <div style="margin-top:10px;text-align:right;">
+    <button type="button" class="btn-lightgrey" id="btnCalcStep3">이 단계까지 계산하기</button>
+  </div>
+</section>
+
+<!-- 4. 사회보험 부과 기준 보수 -->
+<section class="section">
+  <h2>4. 사회보험료 부과 기준 보수 (항목 추가 가능)</h2>
+  
+  <div class="table-wrap">
+
+  <table class="table">
+    <thead>
+      <tr><th>항목명</th><th>금액</th><th></th></tr>
+    </thead>
+    <tbody id="insBaseRows"></tbody>
+    <tfoot>
+      <tr>
+        <th colspan="3">
+          <button type="button" class="btn-lightgrey" id="addInsBaseRow">+ 항목 추가</button>
+        </th>
+      </tr>
+      <tr>
+        <th>총 합계 (부과기준 보수)</th>
+        <th colspan="2"><span id="insBaseTotalDisplay">-</span></th>
+      </tr>
+    </tfoot>
+  </table>
+
+     </div>
+    
+  <div style="margin-top:10px;text-align:right;">
+    <button type="button" class="btn-lightgrey" id="btnCalcStep3b">이 단계까지 계산하기</button>
+  </div>
+</section>
+
+<!-- 5. 사회보험료 -->
+<section class="section">
+  <h2>5. 사회보험료 기관부담금 계산</h2>
+
+  <div class="grid two">
+    <div>
+      <label>국민연금</label><input type="number" id="insRatePension" value="4.5" step="0.001" />
+      <label>건강보험</label><input type="number" id="insRateHealth" value="3.545" step="0.001" />
+      <label>장기요양</label><input type="number" id="insRateLongterm" value="0.459" step="0.001" />
+      <label>산재보험</label><input type="number" id="insRateIndustrial" value="0.966" step="0.001" />
+      <label>고용보험 (기관부담)</label><input type="number" id="insRateEmploy" value="1.75" step="0.001" />
+    </div>
+
+    <div class="card">
+      <strong>합계율:</strong> <span id="insRateTotalDisplay">-</span>
+    </div>
+  </div>
+
+  <div class="table-wrap" style="margin-top:12px;">
+    <table class="table">
+      <thead><tr><th>월</th><th>수기</th><th>보험료</th></tr></thead>
+      <tbody>
+        <tr><td>1월</td><td><input type="checkbox" id="insManualM1" /></td><td><input type="number" id="insM1" /></td></tr>
+        <tr><td>2월</td><td><input type="checkbox" id="insManualM2" /></td><td><input type="number" id="insM2" /></td></tr>
+        <tr><td>3월</td><td><input type="checkbox" id="insManualM3" /></td><td><input type="number" id="insM3" /></td></tr>
+        <tr><td>4월</td><td><input type="checkbox" id="insManualM4" /></td><td><input type="number" id="insM4" /></td></tr>
+        <tr><td>5월</td><td><input type="checkbox" id="insManualM5" /></td><td><input type="number" id="insM5" /></td></tr>
+        <tr><td>6월</td><td><input type="checkbox" id="insManualM6" /></td><td><input type="number" id="insM6" /></td></tr>
+        <tr><td>7월</td><td><input type="checkbox" id="insManualM7" /></td><td><input type="number" id="insM7" /></td></tr>
+        <tr><td>8월</td><td><input type="checkbox" id="insManualM8" /></td><td><input type="number" id="insM8" /></td></tr>
+        <tr><td>9월</td><td><input type="checkbox" id="insManualM9" /></td><td><input type="number" id="insM9" /></td></tr>
+        <tr><td>10월</td><td><input type="checkbox" id="insManualM10" /></td><td><input type="number" id="insM10" /></td></tr>
+        <tr><td>11월</td><td><input type="checkbox" id="insManualM11" /></td><td><input type="number" id="insM11" /></td></tr>
+        <tr><td>12월</td><td><input type="checkbox" id="insManualM12" /></td><td><input type="number" id="insM12" /></td></tr>
+      </tbody>
+      <tfoot><tr><th>연간 합계</th><th></th><th><span id="insAnnualDisplay">-</span></th></tr></tfoot>
+    </table>
+  </div>
+
+  <div style="margin-top:10px;text-align:right;">
+    <button type="button" class="btn-lightgrey" id="btnCalcStep4">이 단계까지 계산하기</button>
+  </div>
+</section>
+
+<!-- 6. 요약 -->
+<section class="section">
+  <h2>6. 연간 인건비 및 통상임금 요약</h2>
+  <div class="grid two">
+    <div class="card">
+      <p><strong>월 정기지급 합계:</strong> <span id="annualFixedDisplay">-</span></p>
+      <p><strong>연 단위 지급 합계:</strong> <span id="annualExtrasDisplay2">-</span></p>
+      <p><strong>연간 총액 (보험 제외):</strong> <span id="annualTotalDisplay">-</span></p>
+    </div>
+    <div class="card">
+      <p><strong>월평균 임금:</strong> <span id="ordinaryMonthlyDisplay">-</span></p>
+      <p><strong>통상임금(시급):</strong> <span id="ordinaryHourlyDisplay">-</span></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p><strong>연간 사회보험료:</strong> <span id="insAnnualDisplay">-</span></p>
+    <p><strong>연간 인건비 소요총액:</strong> <span id="annualTotalWithInsDisplay">-</span></p>
+  </div>
+
+  <div style="margin-top:10px;text-align:right;">
+    <button type="button" class="btn-lightgrey" id="btnCalcStep5">이 단계까지 계산하기</button>
+  </div>
+</section>
+
+
+</main>
+
+
+  <div class="btns">
+      <a class="btn" href="/">메인으로 돌아가기</a>
+    </div>
+
+
+    <footer style="text-align:center; margin-top:15px; color:#444;">
+      제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+    </footer>
+
+
+<script src="./script.js"></script>
+   <script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>

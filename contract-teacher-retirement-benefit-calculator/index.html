@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>계약제교원 퇴직금 산정기</title>
+
+  <link rel="icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+
+  <script src="/static/disable-copy.js"></script>
+  <script src="/static/global-loader.js"></script>
+
+  <style>
+    /* 이 페이지 전용 보조 스타일만 유지 */
+
+    .status-text {
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+    .status-text.ok {
+      color: #25652c;
+    }
+    .status-text.warn {
+      color: #b14545;
+    }
+    .status-text.hint {
+      color: #666;
+    }
+
+    .small-label {
+      font-size: 0.82rem;
+      color: #666;
+      margin-top: 2px;
+      display: block;
+    }
+
+    .inline-note {
+      font-size: 0.82rem;
+      color: #666;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .badge-small {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #ddd;
+      font-size: 11px;
+      color: #555;
+      background: #fafafa;
+      margin-left: 6px;
+    }
+
+    .auto-base-box {
+      border-radius: 12px;
+      border: 1px dashed #d9d9e3;
+      padding: 10px 12px;
+      background: #fafafa;
+      margin-top: 8px;
+      font-size: 0.87rem;
+    }
+
+    .auto-base-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .auto-base-row > div {
+      min-width: 140px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .table-wrap th,
+    .table-wrap td {
+      border: 1px solid #e2e2e2;
+      padding: 6px 4px;
+      text-align: left;
+    }
+
+    .table-wrap th {
+      background: #fafafa;
+      font-weight: 600;
+    }
+
+    .table-wrap input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 4px 6px;
+      font-size: 0.85rem;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .btn-lightgrey {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid #d0d0d0;
+      background: #fafafa;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: #111;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .result-item {
+      border: 1px dashed #ddd;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fcfcfc;
+    }
+
+    .result-item-wide {
+      grid-column: 1 / -1;
+    }
+
+    .result-value {
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .result-total {
+      margin-top: 4px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .auto-base-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 레이아웃: 메인 index와 동일 구조 -->
+  <header class="site-header">
+    <div class="shell">
+      <h1>계약제교원 퇴직금 산정기</h1>
+      <p class="muted">
+        · 강원특별자치도교육청 계약제교원 운영지침, 근로기준법, 근로자퇴직급여보장법 기준으로 평균임금에 의한 퇴직금을 산정합니다. <br/>
+        · 실제 지급 시에는 통상임금 기준 금액, 교육청 퇴직소득세 프로그램(엑셀) 결과와 반드시 함께 대조해야 합니다. <br/>
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell">
+
+      <!-- 1. 기본 정보 -->
+      <section class="section">
+        <h2 style="font-size:1.2rem; margin:0 0 12px">1. 기본 정보</h2>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+          <label>
+            성명(선택)
+            <input id="teacherName" type="text" placeholder="예: 홍길동">
+            <span class="small-label">퇴직금 신청서 작성 시 참고용으로만 사용됩니다.</span>
+          </label>
+
+          <label>
+            주 소정근로시간
+            <input id="weeklyHours" type="number" min="0" step="0.1" placeholder="예: 20">
+            <span class="small-label">4주 평균 주 15시간 이상 근로 여부 판단에 사용됩니다.</span>
+          </label>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:10px;">
+          <label>
+            임용 시작일
+            <input id="startDate" type="date">
+          </label>
+          <label>
+            임용 종료일(퇴직일)
+            <input id="endDate" type="date">
+            <span class="small-label">계약 종료일·실제 퇴직일 기준으로 입력</span>
+          </label>
+        </div>
+
+        <p id="eligibilityMsg" class="status-text hint">
+          임용 시작일·종료일, 주 소정근로시간을 입력하면 퇴직금 대상 요건(1년 이상·주 15시간 이상)을 간단히 점검해 줍니다.
+        </p>
+      </section>
+
+      <!-- 2. 임금 입력 -->
+      <section class="section">
+        <h2 style="font-size:1.2rem; margin:0 0 12px">
+          2. 평균임금 산정을 위한 임금 입력
+          <span class="badge-small">퇴직 전 3개월 기준</span>
+        </h2>
+
+        <!-- 2-0. 기본급 자동 계산 (호봉표 연동) -->
+        <h3>2-0. 기본급 자동 계산 (교원 봉급표 연동)</h3>
+        <div class="auto-base-box">
+          <div class="auto-base-row">
+            <div>
+              <span class="small-label">호봉</span>
+              <select id="stepSelect">
+                <option value="">선택</option>
+              </select>
+            </div>
+            <div>
+              <span class="small-label">1일 기준 근무시간</span>
+              <input id="hoursPerDay" type="number" min="1" max="8" step="0.5" placeholder="예: 4 (시간제)">
+            </div>
+            <div>
+              <button type="button" id="btnCalcBasePay" class="btn-lightgrey">기본급 계산</button>
+            </div>
+          </div>
+          <div id="autoBaseInfo" class="inline-note">
+            봉급표 기준 8시간 월봉급액을 호봉별로 불러온 뒤, 입력한 1일 근무시간 비율대로 기본급(월 정액)을 계산합니다.<br>
+            계산된 기본급은 아래 <strong>월정액 임금</strong> 항목 중 ‘기본급’ 행에 자동 반영할 수 있습니다.
+          </div>
+        </div>
+
+        <!-- 2-1. 월정액 임금 -->
+        <h3 style="margin-top:18px">2-1. 월정액 임금 (기본급·정액수당 등)</h3>
+        <p class="inline-note">
+          · 월정액은 “월 기준 금액”을 넣으면 최근 3개월분을 자동으로 <strong>월 정액 × 3</strong>으로 산정합니다.<br>
+          · 최근 3개월 동안 실제 지급액이 달랐다면, “최근 3개월 실지급 합계(수기입력)”에 <strong>3개월 합계</strong>를 직접 입력하면 해당 값으로 자동 계산값을 덮어씁니다.
+        </p>
+
+        <div class="table-wrap">
+          <table aria-label="월정액 임금 입력">
+            <thead>
+              <tr>
+                <th style="width:30%">항목명</th>
+                <th style="width:26%">월 정액(원)</th>
+                <th style="width:34%">최근 3개월 실지급 합계(원, 선택)</th>
+                <th style="width:10%">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="monthlyRows">
+              <tr>
+                <td><input type="text" name="monthlyName" value="기본급"></td>
+                <td><input type="text" name="monthlyBase" placeholder="예: 2,500,000"></td>
+                <td><input type="text" name="monthlyOverride" placeholder="미입력 시 월정액×3"></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" name="monthlyName" value="정액급식비"></td>
+                <td><input type="text" name="monthlyBase" placeholder="예: 150,000"></td>
+                <td><input type="text" name="monthlyOverride" placeholder=""></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button type="button" id="addMonthlyRow" class="btn-lightgrey" style="margin-top:8px">
+          + 월정액 항목 추가
+        </button>
+
+        <!-- 2-2. 비월정액 임금 -->
+        <h3 style="margin-top:24px">2-2. 비월정액 임금 (정근수당·명절휴가비·성과상여금 등)</h3>
+        <p class="inline-note">
+          · 1년 동안 지급된 총액을 입력하면, 최근 3개월분은 자동으로 <strong>연총액 × 3/12</strong>로 계산합니다. <br>
+          · 최근 3개월분 실제 지급액이 확실하다면 “최근 3개월 실지급 합계”를 입력하여 자동 계산값을 덮어쓸 수 있습니다.<br>
+          · 퇴직으로 인해 새로 발생하는 연차수당 등은 평균임금 산정 시 포함하지 않습니다. 
+        </p>
+
+        <div class="table-wrap">
+          <table aria-label="비월정액 임금 입력">
+            <thead>
+              <tr>
+                <th style="width:30%">항목명</th>
+                <th style="width:26%">연간 총액(원)</th>
+                <th style="width:34%">최근 3개월 실지급 합계(원, 선택)</th>
+                <th style="width:10%">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="yearlyRows">
+              <tr>
+                <td><input type="text" name="yearlyName" value="정근수당"></td>
+                <td><input type="text" name="yearlyAnnual" placeholder="예: 1,200,000"></td>
+                <td><input type="text" name="yearlyOverride" placeholder="미입력 시 연총액×3/12"></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" name="yearlyName" value="명절휴가비"></td>
+                <td><input type="text" name="yearlyAnnual" placeholder=""></td>
+                <td><input type="text" name="yearlyOverride" placeholder=""></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" name="yearlyName" value="성과상여금"></td>
+                <td><input type="text" name="yearlyAnnual" placeholder=""></td>
+                <td><input type="text" name="yearlyOverride" placeholder=""></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" name="yearlyName" value="연차수당(이미 지급분)"></td>
+                <td><input type="text" name="yearlyAnnual" placeholder=""></td>
+                <td><input type="text" name="yearlyOverride" placeholder=""></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" name="yearlyName" value="기타(초과근무수당 초과분 등)"></td>
+                <td><input type="text" name="yearlyAnnual" placeholder=""></td>
+                <td><input type="text" name="yearlyOverride" placeholder=""></td>
+                <td class="center">
+                  <button type="button" class="btn-lightgrey btn-remove-row">–</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button type="button" id="addYearlyRow" class="btn-lightgrey" style="margin-top:8px">
+          + 비월정액 항목 추가
+        </button>
+      </section>
+
+      <!-- 3. 계산 및 결과 -->
+      <section class="section">
+        <h2 style="font-size:1.2rem; margin:0 0 12px">3. 평균임금 및 퇴직금 계산</h2>
+
+        <div style="margin-top:6px">
+          <button type="button" id="btnCalc" class="btn">평균임금 및 퇴직금 계산하기</button>
+          <button type="button" id="btnReset" class="btn-lightgrey">입력값 초기화</button>
+        </div>
+
+        <div id="resultArea" style="margin-top:16px; display:none">
+          <h3>3-1. 평균임금 산정 결과</h3>
+          <div class="result-grid">
+            <div class="result-item">
+              <div>3개월 임금총액(A)</div>
+              <div id="resTotal3m" class="result-value">-</div>
+            </div>
+            <div class="result-item">
+              <div>3개월 총일수</div>
+              <div id="resDays3m" class="result-value">-</div>
+            </div>
+            <div class="result-item">
+              <div>1일 평균임금</div>
+              <div id="resAvgDaily" class="result-value">-</div>
+            </div>
+            <div class="result-item">
+              <div>월 평균임금 (참고)</div>
+              <div id="resAvgMonthly" class="result-value">-</div>
+            </div>
+          </div>
+
+          <h3 style="margin-top:18px">3-2. 근속기간 및 퇴직금(평균임금 기준)</h3>
+          <div class="result-grid">
+            <div class="result-item">
+              <div>근속기간(달력일수 기준)</div>
+              <div id="resServiceDays" class="result-value">-</div>
+            </div>
+            <div class="result-item">
+              <div>근속연수(년 환산, 참고)</div>
+              <div id="resServiceYears" class="result-value">-</div>
+            </div>
+            <div class="result-item result-item-wide">
+              <div>퇴직금(평균임금 기준 추정)</div>
+              <div id="resSeverance" class="result-total">-</div>
+            </div>
+          </div>
+
+          <p class="muted" style="margin-top:12px; font-size:0.85rem;">
+            · 실제 퇴직금은 <strong>평균임금</strong>과 <strong>통상임금</strong>으로 각각 산정한 금액 중 더 큰 금액을 기준으로 산정합니다. <br>
+            · 본 도구는 평균임금 기준 금액만 계산하므로, 통상임금 계산기 및 교육청 퇴직소득세 프로그램(붙임 엑셀)과 반드시 함께 확인해 주세요. 
+          </p>
+        </div>
+      </section>
+
+      <!-- 메인으로 돌아가기 버튼 (공통 레이아웃) -->
+      <div class="home-link-wrap">
+        <a href="/" class="btn-home">메인 페이지로 돌아가기</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell" style="text-align:center;">
+      <p>
+        제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+      </p>
+    </div>
+  </footer>
+
+  <script src="/static/teacher-step-core.js"></script>
+  <script src="app.js"></script>
+   <script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>
+

@@ -1,0 +1,400 @@
+/* 251204목 공통 스타일 */
+
+/* 박스 모델 통일 */
+* {
+  box-sizing: border-box;
+}
+
+/* =============================
+   기본 타이포 & 반응형 글자 크기
+   ============================= */
+html {
+  font-size: 16px; /* PC 기본 rem 기준 */
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 15px; /* 모바일은 전체 스케일 자연스럽게 감소 */
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #111;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Apple SD Gothic Neo", "Noto Sans KR", "맑은 고딕", sans-serif;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+/* 링크 기본 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* =============================
+   전역 헤딩 계층
+   ============================= */
+
+/* 페이지 제목: 사이트 전체에서 최우선 */
+body h1 {
+  font-size: 2.2rem;
+  margin: 28px 0 18px;
+  text-align: center !important;
+  color: #111;
+  font-weight: 700;
+}
+
+/* 큰 섹션 제목 */
+body h2 {
+  font-size: 1.6rem;
+  margin: 28px 0 12px;
+  color: #222;
+  font-weight: 700;
+}
+
+/* 중간 소제목 */
+body h3 {
+  font-size: 1.4rem;
+  margin: 20px 0 10px;
+  color: #222;
+  font-weight: 600;
+}
+
+/* 소단락 제목 */
+body h4 {
+  font-size: 1.2rem;
+  margin: 16px 0 8px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* =============================
+   본문 텍스트
+   ============================= */
+
+body p,
+body li,
+body div,
+body span {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: #333;
+}
+
+body p {
+  margin: 14px 0;
+}
+
+body li {
+  margin: 4px 0;
+  line-height: 1.55;
+}
+
+ul, ol {
+  margin: 12px 0 18px;
+  padding-left: 22px;
+}
+
+body .muted {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+/* =============================
+   예외 클래스(local-*)
+   ============================= */
+
+.local-h2 { font-size: 1.3rem !important; }
+.local-h3 { font-size: 1.1rem !important; }
+.local-large { font-size: 1.2rem !important; }
+.local-small { font-size: 0.9rem !important; }
+.local-tight { margin-bottom: 6px !important; }
+.local-accent { color: #0051a8 !important; }
+
+/* =============================
+   레이아웃 공통
+   ============================= */
+
+.shell {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.sub {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* 상단 헤더 */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #e8e8ef;
+}
+
+.site-header .shell {
+  padding: 16px;
+}
+
+/* 섹션 카드 */
+.section {
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin: 18px 0;
+  background: #fff;
+}
+
+/* 내부 카드 */
+.card {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  background: #fafafa;
+}
+
+/* =============================
+   레이아웃 유틸
+   ============================= */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.row.between { justify-content: space-between; }
+.row.gap { gap: 10px; }
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.grid.three { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+
+@media (max-width: 640px) {
+  .row { flex-wrap: wrap; align-items: flex-start; }
+  .grid.two, .grid.three { grid-template-columns: 1fr; }
+}
+
+/* =============================
+   버튼 스타일
+   ============================= */
+
+.btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+  background: #fff;
+  cursor: pointer;
+}
+
+.btn + .btn { margin-left: 10px; }
+.btn:hover { background: #f3f4f6; }
+
+.btn.primary { background: #111; color: #fff; }
+.btn.primary:hover { background: #000; }
+
+.btn.ghost { background: #f9fafb; border-color: #d4d4d8; }
+.btn.ghost:hover { background: #eef2ff; }
+
+.btn-desc {
+  font-size: 1rem;
+  margin: 6px 0 18px;
+  color: #333;
+}
+
+.btn-lightgrey {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  border: 1px solid #d4d4d8;
+}
+
+/* 메인으로 돌아가기 */
+.home-link-wrap {
+  max-width: 880px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-home {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #f9fafb;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.btn-home:hover {
+  background: #eef2ff;
+}
+
+/* =============================
+   푸터
+   ============================= */
+
+.site-footer {
+  border-top: 1px solid #e8e8ef;
+  margin-top: 32px;
+  padding: 16px 0 20px;
+  color: #444;
+  font-size: 1rem;
+}
+
+.site-footer p { margin: 4px 0; }
+
+/* =============================
+   입력 UI
+   ============================= */
+
+input,
+select,
+button,
+textarea {
+  font: inherit;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="time"],
+input[type="date"],
+select,
+textarea {
+  padding: 10px 12px;
+  border: 1px solid #d9d9e3;
+  border-radius: 12px;
+  background: #f9fafb;
+  outline: none;
+  min-width: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #b4b4d0;
+  box-shadow: 0 0 0 2px rgba(180, 180, 208, 0.25);
+  background: #fff;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: #f6f7fb;
+  color: #888;
+}
+
+.numeric { text-align: right; }
+
+/* =============================
+   구분선(hr)
+   ============================= */
+
+hr {
+  border-top: 1px solid #ddd;
+  margin: 26px 0;
+  opacity: 0.9;
+}
+
+body h2 + hr {
+  margin-top: 10px !important;
+}
+
+/* =============================
+   테이블 스타일
+   ============================= */
+
+.table-wrap,
+.table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 12px 0;
+  padding-bottom: 6px;
+}
+
+.table-wrap table,
+.table-wrapper table {
+  min-width: 800px;
+  border-collapse: collapse;
+}
+
+.sheetlike {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.sheetlike th,
+.sheetlike td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+}
+
+.sheetlike th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+/* =============================
+   ↓↓↓ 요청사항 적용 부분 ↓↓↓
+   simple-table 정렬
+   ============================= */
+
+.simple-table th {
+  text-align: left;
+}
+
+.simple-table td {
+  text-align: right;
+  padding-right: 4px;
+}
+
+.note {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* =============================
+   header/footer 레이아웃 통일
+   ============================= */
+
+.site-header .shell,
+.site-footer .shell {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* 모든 셀렉트 박스가 그리드 밖으로 넘치지 않도록 강제 */
+.field select {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}

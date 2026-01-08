@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>개발자 노트</title>
+  <link rel="icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    body{
+      color:#111;
+      background:#fff;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Apple SD Gothic Neo","Noto Sans KR","맑은 고딕",sans-serif;
+    }
+    main{
+      max-width:880px;
+      margin:0 auto;
+      padding:24px 16px; /* 메인 index와 동일 */
+    }
+
+    /* 섹션 박스 통일 */
+    .section{
+      border:1px solid #e5e5e5;
+      border-radius:12px;
+      padding:16px 18px;
+      margin:18px 0; /* 메인 index와 동일 */
+    }
+
+    h1{font-size:1.75rem;margin:18px 0 8px}
+    h2{font-size:1.2rem;margin:0 0 12px;color:#222}
+    p{line-height:1.65;margin:10px 0;color:#333}
+    .muted{color:#666;font-size:0.9rem}
+
+    a.btn{
+      display:inline-block;
+      margin-top:16px;
+      padding:10px 16px;
+      border:1px solid #222;
+      border-radius:12px;
+      text-decoration:none;
+      color:#111;
+      font-weight:600;
+    }
+
+    footer{margin:40px 0 20px;color:#333;font-size:0.9rem}
+
+    hr{border:none;border-top:1px solid #ddd;margin:28px 0}
+
+    /* 만화 이미지 */
+    .comic-wrap{margin-top:8px}
+    figure{margin:18px 0}
+    .comic{width:100%;height:auto;display:block;border:1px solid #e5e5e5;border-radius:12px}
+    figcaption{font-size:0.92rem;color:#444;margin-top:6px}
+    .link-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  </style>
+</head>
+
+<body>
+  <main class="container" style="max-width:880px; margin:0 auto; padding:24px 16px;">
+
+    <h1>개발자 노트</h1>
+    <p class="muted">·인간의 고통을 진주로 바꾸는 과정에 대하여.</p>
+    <hr />
+ 
+    
+    <!-- ============== 구분선 ============== -->
+
+    
+    <section class="section">
+      <h2>프로젝트 작업 배경</h2>
+      <p>
+        시작은 발가락 골절되고 시무룩해진 상태에서 일하다가 울분이 터져서 손댔습니다. 2025.11.17.(월)현재도 왼팔에 반깁스하고 있고요. <br/>
+        <br/>
+        하다보니 <b><span style="color:red">회계 말 바쁜 시기에 기면증 증상으로 인한 업무 차질을 최소화</span></b>하는데도 도움 될 거 같더군요. 
+        <b><span style="color:red">졸음 증상과 그로인한 외상(골절·염좌 등) 때문에 발생해 온 업무 효율 하락 및 부재 상황을 대비</span></b>한다든지. 
+        <s>발 다치면 차라리 다행인데 손은 답이 없음</s> <br/>
+        <br/>
+        키보드 타자 치는 등 손가락이나 팔 쓸 일을 최소화할 수 있고, 졸려서 업무 속도와 정확도가 떨어질 때 빛을 발해 저를 도와줄 거라고 생각합니다. 마음 둘 곳도 필요했는데 쉽고 재밌는 거 하니까 스트레스도 줄고요. <br/>
+        <br/>
+        이렇게 지극히 개인적인 사유에서 출발했습니다.<br/>
+      </p>
+    </section>
+
+
+
+ <!-- ============== 구분선 ============== -->
+    
+    <section class="section">
+      <h2>계획·목표</h2>
+      <p>
+        시작은 개인적인 목적이었지만 언젠가 본격적으로 사이트 개발해서 다른 분들께도 유용하게 쓰이면 좋겠습니다.
+        개인 작업이 공익으로 확장되는 것도 의미 있는 일이니까요. <br />
+        <br />
+        그래서 배포를 염두에 두고 접근성이 좋은 웹페이지로 만들고 있습니다. 
+        기존에 C++로 만들었던 실행파일(exe)은 접근성이 많이 떨어지는 듯합니다. <s>실제로 배포가 될지는 모르겠지만</s><br />
+        <br />
+        번거로운 계산과 노가다성 업무를 자동화하여 시간 소모를 줄일 수 있다면,
+        질환 등으로 인해 남들보다 느린 속도로 일하는 사람도
+        좌절하고 포기하지 않고 조금씩이라도 계속 앞으로 나아갈 수 있을 것입니다. <br />
+        <br/>
+        <br/>
+      </p>
+    </section>
+
+    
+ <!-- ============== 구분선 ============== -->
+    
+    <section class="section">
+      <h2>발작수면 및 허탈발작 (기면증)</h2>
+      <p>
+        <br />
+        <b>주 상병명: 발작수면 및 허탈발작 (Narcolepsy and Cataplexy, 기면증) / 질병코드: G47.4</b><br />
+        <br/>
+        증상: 상시 졸리며 갑자기 잠듭니다. 근육이 멋대로 풀려 넘어지기도 합니다. <br />
+        인대 염좌랑 골절 상시 달고 다닙니다. 학교에서도 보호장비 착용하고 생활합니다. <br/>
+        <br/>
+        
+        발작의 형태가 수면으로 나타나는 질환이며, 일반적인 수면 양상과는 달라서 의지로 조절이 안 됩니다. 
+        각성과 수면을 조절하는 뇌내 스위치가 제멋대로 24시간 딸깍거린다고 이해하시면 됩니다. <br/>
+        <br/>
+      
+        원인: 뇌의 기질적인 손상. 현대의학으로 완치 가능성은 없으며 약물 치료로 증상 강도를 줄입니다. <br />
+        기면증약(각성제)를 먹어도 온전한 각성은 불가능합니다. 논문상 보고된 약효는 70% 정도. <br />
+        <br />
+
+ <!-- ============== 구분선 ============== -->
+        
+        <div class="link-row">
+          <a class="btn"
+            href="https://youtu.be/llo58EK5UfI?si=C8ivVGUOWBQZ51k3"
+            target="_blank" rel="noopener noreferrer"
+            style="background:#3b82f6; color:white; border:none; font-weight:600; padding:12px 20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+             희귀질환 바로 알기: 기면증 편 (질병관리청 유튜브 링크)
+          </a>
+        </div>
+        
+        <div class="link-row">
+          <a class="btn"
+            href="https://www.kord.or.kr/bbs/board.php?bo_table=0604&wr_id=207"
+            target="_blank" rel="noopener noreferrer"
+            style="background:#3b82f6; color:white; border:none; font-weight:600; padding:12px 20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+             희귀질환 안내서 다운로드 바로가기 (질병관리청 링크)
+          </a>
+        </div>
+
+        </section>
+    
+ <!-- ============== 구분선 ============== -->
+
+    <section class="section">
+      <h2>정상성과 울타리 밖의 구성원</h2>
+      <p>
+        기면증으로 인한 이질적인 요소 외에, 애초에 사람 자체도 이상하고 일반적이지 않다, 나쁜 의미로 튄다는 평가가 지속적으로 들립니다.<br /> 
+        <br />
+        근데 어차피 무난한 사회성을 가지고 있더라도 기면증과 다른 뇌신경계 질환들이 있는 한 계속 그렇게 공동체 밖에서 겉돌겁니다. <br /> 
+        조직 내에서 절대다수를 차지하는 <b>보통의 일반적인 사람들</b>이 정한 <b>정상성의 범주</b>에서 벗어난다고 여길테니, 
+        <b>"저 사람은 우리와 다르다, 이상하다"</b>라고 계속 구분지어질 것입니다. <br /> 
+        <br /> 
+        왜냐하면 그건 관찰이 아니라 회피의 언어이기 때문입니다. 복잡한 문제를 라벨 하나로 요약해서 이마에 붙여놓고 퉁치면 에너지 소비가 훨씬 적거든요.<br /> 
+        그래서 저는 울타리 바깥에서 스스로 만든 길을 걸어갈 것입니다. 이상하다라는 말로 규정하는 집단의 한계를 뛰어넘어 일하고 만들고 표현하겠습니다. <br /> 
+        <br /> 
+        <br />
+    </section>
+    
+ <!-- ============== 구분선 ============== -->
+
+    <!-- 
+
+    <section class="section">
+      <h2>번외) 포장을 관둔 속마음</h2>
+      <p>
+        고상하게 이런저런 이유 드는 거 때려치고 가감없이 말하면, <b><span style="color:red">개발 작업을 지속하는 동기</span></b>는 이 두 가지가 제일 큼. 하나는 재밌어서 (솔직히 쓸모는 나중임. 잘 만들면 기분 좋은 게 먼저), 다른 하나는 <b><span style="color:red">열 받아서. 미칠듯한 분노와 증오심에 휩싸여서.</span></b><br/>
+        <br/>
+        업무 성격과 제 성향이 맞지 않으니 다른 더 잘 할 수 있는 직장을 찾아보는 게 좋겠다고 말하거나, 공무원 할 건강 상태가 아닌 것 같다며 직업 선택을 잘못한 것 같으니 진로 상담사를 찾아가보는 게 좋겠다고 말씀하시는 분들 때문에 더해지는 울분을 해소할 방법의 하나임. <br/>
+        <br/>
+        조언이랍시고 남의 인생에 무책임한 방향성만 대충 던져놓는 사람들과는 다르게, 그런 말 듣고도 나는 1인분 하는 사람이 돼서 다른 사람들은 선뜻 못 하는 거 해내는 거 보여주고 싶어서. 매 순간마다 속에서 부글부글 들끓는 분노와 증오심과 열패감을 생산적으로 해소하고, 몇 년 후에 당신들이 틀렸었다고 인정하는 모습을 보기 위해서. <br/>
+        <br/>
+        그리고 어려울 때 외면한 사람들이 내 웹사이트 쓰게 만들려고. 조직 전체가 쓰지 않으면 업무 자체가 굴러가지 않는 수준의 편의성·정확성·일관성을 제공하면 직성이 풀릴 것 같음. 
+        <br/>
+        그런 목적이기에 잘 되갈수록 개발 작업이 더 재밌고, 재밌는만큼 울분도 풀리고, 무엇보다도 그 생산물이 개발자 본인의 업무에도 조직 내 다른 사람들이 일하는데도 도움이 된다면 뭐… 대충 결과가 좋으면 좋은 거 아니겠습니까. <br/>
+        <br/>
+      </p>
+      
+    </section>
+
+    -->
+
+<!-- ================================== 구분선 ========================================== -->
+    
+    <section class="section">
+     <h3 id="comics">보호 장비</h3>
+      <p class="muted">
+        ·갑옷 같고 멋있는 보호 장비. 학교에서 착용함.
+      </p>
+      
+    <div class="comic-wrap">
+      <figure>
+        <img class="comic" src="./img/suit-of-armor-1.jpg" alt="갑옷 같고 멋있는 보호 장비" loading="lazy">
+        <br/>
+        <img class="comic" src="./img/suit-of-armor-2.jpg" alt="갑옷 같고 멋있는 보호 장비" loading="lazy">
+      </figure>
+    </div>
+      
+      <br/>
+      <h3 id="comics">『교직원을 위한 희귀질환 안내서 홍보 만화』</h3>
+      <br/>
+
+      <div class="comic-wrap">
+        <figure>
+          <img class="comic" src="./img/rare-guide-comic.jpg" alt="희귀질환 안내서 홍보 만화" loading="lazy">
+        </figure>
+      </div>
+
+      
+     <h3 id="comics">『나를 깨우는 목소리』</h3>
+      <br/>
+    <div class="comic-wrap">
+      <figure>
+        <img class="comic" src="./img/guardian-angel-1.jpg" alt="나를 깨우는 목소리" loading="lazy">
+        <br/>
+        <img class="comic" src="./img/guardian-angel-2.jpg" alt="나를 깨우는 목소리" loading="lazy">
+      </figure>
+    </div>
+
+      
+      </section>
+
+    <a href="/" class="btn">메인으로 돌아가기</a>
+
+    <footer style="text-align:center; margin-top:15px; color:#444;">
+      제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+    </footer>
+  </main>
+   <script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>

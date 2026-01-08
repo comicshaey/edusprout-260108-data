@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>학년도별 월간 업무 일정 달력</title>
+  <link rel="icon" href="/static/favicon.ico" />
+  <style>
+    :root{
+      --black:#111;
+      --line:#e5e5e5;
+      --sun:#c8352d;
+      --sat:#1e5fbf;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    /* 상단 범위 텍스트 숨기기 */
+    .range-text{
+      display:none !important;
+    }
+
+    /* 최상단 sticky header: 제목 + 버튼 */
+    .sticky-header{
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background:#fff;
+      box-shadow:0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .sticky-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:12px 12px 8px;
+    }
+
+    /* 제목 */
+    #title{
+      font-size:1.4rem;
+      font-weight:700;
+      margin:0 0 6px 0;
+    }
+
+    /* 상단 버튼 2개 */
+    .top-buttons{
+      display:flex;
+      gap:8px;
+      margin-bottom:2px;
+    }
+    .btn-top{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:8px;
+      border:1px solid #222;
+      background:#fff;
+      color:#111;
+      font-weight:600;
+      font-size:.85rem;
+      text-decoration:none;
+    }
+
+    /* 페이지 본문 */
+    body{
+      margin:0;
+      background:#fff;
+      color:#111;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:12px 12px 32px;
+    }
+    .muted{
+      color:#555;
+      font-size:.95rem;
+      margin:12px 0 16px;
+    }
+
+    /* 설정 영역 */
+    .controls-wrap{
+      margin-bottom:16px;
+    }
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      font-size:.9rem;
+    }
+    .controls input{
+      padding:4px 6px;
+      font-size:.9rem;
+    }
+    .controls button{
+      padding:5px 10px;
+      border-radius:6px;
+      border:1px solid var(--line);
+      background:#fafafa;
+      cursor:pointer;
+      font-size:.9rem;
+    }
+
+    .controls-toggle{
+      text-align:right;
+      margin-top:4px;
+    }
+    .toggle-btn{
+      font-size:.8rem;
+      border:none;
+      background:none;
+      color:#555;
+      cursor:pointer;
+      text-decoration:underline;
+      padding:0;
+    }
+
+    /* 달력 구조 */
+    .grid{
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+    }
+    .head{
+      background:#fafafa;
+      text-align:center;
+      padding:10px 8px;
+      border-bottom:1px solid var(--line);
+      border-right:1px solid var(--line);
+      font-size:.9rem;
+    }
+    .head:last-child{border-right:none;}
+
+    .cell{
+      min-height:120px;
+      border-right:1px solid var(--line);
+      padding:8px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      border-bottom:1px solid var(--line);
+    }
+    .cell:last-child{border-right:none;}
+
+    .date{
+      font-size:.9rem;
+      font-weight:900;
+      margin-bottom:2px;
+    }
+    .txt{
+      flex:1;
+      white-space:pre-wrap;
+      overflow:auto;
+      overflow-wrap:anywhere;
+      font-size:.9rem;
+      line-height:1.35;
+    }
+
+    /* 일/토 색상 */
+    .row:first-child > .head:nth-child(1){ color:var(--sun) }
+    .row:first-child > .head:nth-child(7){ color:var(--sat) }
+    .row:not(:first-child) > .cell:nth-child(1) .date{ color:var(--sun) }
+    .row:not(:first-child) > .cell:nth-child(7) .date{ color:var(--sat) }
+
+    /* 색상 우선 적용 - 공휴일: 빨강 / 재량휴업일: 초록 */
+    .date.holiday-national{
+      color:var(--sun);
+    }
+    .date.holiday-schooloff{
+      color:green;
+    }
+    .date.holiday-national .date-link,
+    .date.holiday-schooloff .date-link{
+      color:inherit;
+    }
+
+    .date-link{ color:inherit; text-decoration:none; }
+    .date-link:hover{ text-decoration:underline; }
+
+    .month-wrap{
+      margin-bottom:24px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .month-header{
+      padding:8px 10px;
+      border-bottom:1px solid var(--line);
+      background:#fdfdfd;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:10px;
+      border:1px solid #222;
+      font-weight:600;
+      font-size:.9rem;
+      text-decoration:none;
+      color:#111;
+      background:#fff;
+    }
+    footer{
+      margin-top:24px;
+      font-size:.85rem;
+      color:#444;
+      text-align:center;
+    }
+
+    /* ---------------------------
+       📱 모바일 전용 스타일
+    ----------------------------*/
+    @media (max-width: 640px) {
+      .sticky-inner{
+        padding-left:14px;
+        padding-right:14px;
+      }
+      .wrap{
+        padding-left:14px;
+        padding-right:14px;
+      }
+
+      #title{
+        font-size:1.2rem;
+      }
+
+      .top-buttons{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+      }
+      .btn-top{
+        font-size:0.8rem;
+        padding:6px 10px;
+      }
+
+      .controls{
+        font-size:0.85rem;
+      }
+      .controls input{
+        font-size:0.85rem;
+        padding:3px 5px;
+      }
+      .controls button{
+        font-size:0.85rem;
+        padding:4px 8px;
+      }
+
+      .cell{
+        min-height:90px;
+        padding:6px;
+      }
+      .date{
+        font-size:0.85rem;
+      }
+      .txt{
+        font-size:0.8rem;
+        line-height:1.3;
+      }
+      .head{
+        padding:8px 4px;
+        font-size:0.8rem;
+      }
+      .month-header{
+        font-size:0.9rem;
+        padding:6px 8px;
+      }
+      .btn{
+        font-size:0.85rem;
+        padding:6px 10px;
+      }
+      footer{
+        font-size:0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 최상단 Sticky: 학년도 제목 + 상단 버튼 -->
+  <div class="sticky-header">
+    <div class="sticky-inner">
+      <h1 id="title">학년도별 월간 업무 일정 달력</h1>
+      <div class="top-buttons">
+        <a href="/calendar/" class="btn-top">학년도별 페이지로</a>
+        <a href="/" class="btn-top">메인으로</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+
+<!-- 주석처리
+    
+    <p class="muted">
+      · 학년도 기준(3월~다음해 2월) · notes JSON에서 일정 불러옴
+    </p>
+    
+주석처리 -->
+
+    <!-- 설정 영역 (자동 접힘) -->
+    <div class="controls-wrap">
+      <div class="controls" id="controls" style="display:none">
+        <label>시작 연월: <input type="month" id="startYmInput"></label>
+        <label>개월 수: <input type="number" id="countInput" min="1" max="36"></label>
+        <button id="applyBtn">적용</button>
+        <span class="range-text" id="rangeText"></span>
+      </div>
+      <div class="controls-toggle">
+        <button type="button" id="toggleControlsBtn" class="toggle-btn">설정 열기</button>
+      </div>
+    </div>
+
+    <div id="root"></div>
+
+    <footer>
+      제작자: 씩씩하고 귀여운 고주무관 · 개인 토이 프로젝트
+    </footer>
+  </div>
+
+<script>
+  // 학년도 기본값 (3월 시작)
+  function getDefaultStartYm(){
+    const t = new Date();
+    const y = t.getFullYear();
+    const m = t.getMonth()+1;
+    return (m>=3 ? y : y-1) + "-03";
+  }
+  function getDefaultMonths(){ return 12; }
+
+  const q = new URLSearchParams(location.search);
+  const DEFAULT_START = getDefaultStartYm();
+  const START_YM = q.get("start") || DEFAULT_START;
+  const COUNT = Math.max(1, Math.min(36, parseInt(q.get("months")||getDefaultMonths(),10)));
+
+  // 학년도 계산: 3~12월은 그 해, 1~2월은 전년도 학년도
+  function getAcademicYear(ym){
+    const [yStr,mStr] = ym.split("-");
+    const y = parseInt(yStr,10);
+    const m = parseInt(mStr,10);
+    return (m>=3 ? y : y-1);
+  }
+  const academicYear = getAcademicYear(START_YM);
+  document.getElementById("title").textContent = `${academicYear}학년도 월간 업무 일정 달력`;
+
+  // ================================
+  //   🇰🇷 기본 양력 공휴일 + 추가 공휴일/재량휴업일
+  // ================================
+  function getBaseNationalHolidayList(year){
+    const list = [
+      `${year}-01-01`, // 신정
+      `${year}-03-01`, // 삼일절
+      `${year}-05-05`, // 어린이날
+      `${year}-06-06`, // 현충일
+      `${year}-08-15`, // 광복절
+      `${year}-10-03`, // 개천절
+      `${year}-10-09`, // 한글날
+      `${year}-12-25`  // 성탄절
+    ];
+    return new Set(list);
+  }
+
+  let extraNationalSet = new Set(); // holidays.json → national
+  let schoolOffSet     = new Set(); // holidays.json → schoolOff
+
+  async function loadExtraHolidays(){
+    try{
+      const res = await fetch("holidays.json");
+      if(!res.ok) return;
+      const data = await res.json();
+      extraNationalSet = new Set(data.national || []);
+      schoolOffSet     = new Set(data.schoolOff || []);
+    }catch(e){
+      // 파일 없거나 오류 나면 그냥 기본 공휴일만 사용
+    }
+  }
+
+  let NOTES = {};
+
+  const pad = n => (n<10?"0":"")+n;
+  const ymd = (y,m,d)=>`${y}-${pad(m)}-${pad(d)}`;
+  const ymToDate=ym=>{let[a,b]=ym.split("-").map(Number);return new Date(a,b-1,1);}
+  const addMonths=(d,n)=>new Date(d.getFullYear(),d.getMonth()+n,1);
+
+  const startYmInput=document.getElementById("startYmInput");
+  const countInput=document.getElementById("countInput");
+  const applyBtn=document.getElementById("applyBtn");
+  const controlsEl=document.getElementById("controls");
+  const toggleBtn=document.getElementById("toggleControlsBtn");
+  const root=document.getElementById("root");
+  const rangeText=document.getElementById("rangeText");
+
+  startYmInput.value=START_YM;
+  countInput.value=COUNT;
+
+  function setRangeText(){
+    const s=ymToDate(START_YM);
+    const e=addMonths(s,COUNT-1);
+    rangeText.textContent=
+      `${s.getFullYear()}년 ${s.getMonth()+1}월 ~ ${e.getFullYear()}년 ${e.getMonth()+1}월`;
+  }
+
+  // notes JSON 관리
+  function halfKey(d){
+    const y=d.getFullYear(),m=d.getMonth()+1;
+    if(m>=3 && m<=8) return `${y}-03-08`;
+    return `${m>=9?y:y-1}-09-02`;
+  }
+  async function loadNotes(keys){
+    NOTES={};
+    await Promise.all(keys.map(async k=>{
+      try{
+        const r=await fetch(`notes/notes-${k}.json`);
+        if(!r.ok) return;
+        Object.assign(NOTES,await r.json());
+      }catch(e){}
+    }));
+  }
+  function collectKeys(startYm,count){
+    const s=ymToDate(startYm);
+    const set=new Set();
+    for(let i=0;i<count;i++){
+      set.add(halfKey(addMonths(s,i)));
+    }
+    return [...set];
+  }
+
+  // 월 렌더링
+  function renderMonth(y,m){
+    const baseHolidays = getBaseNationalHolidayList(y);
+
+    const first=new Date(y,m-1,1);
+    const last=new Date(y,m,0).getDate();
+    const wd=first.getDay();
+
+    const wrap=document.createElement("div");
+    wrap.className="month-wrap";
+    wrap.innerHTML=`<div class="month-header">${y}년 ${m}월</div><div class="grid"></div>`;
+    const grid=wrap.querySelector(".grid");
+
+    let h="";
+    h+='<div class="row">';
+    ["일","월","화","수","목","금","토"].forEach(d=>{h+=`<div class="head">${d}</div>`});
+    h+='</div>';
+
+    let day=1;
+    while(day<=last){
+      h+='<div class="row">';
+      for(let i=0;i<7;i++){
+        if(day===1 && i<wd){ 
+          h+='<div class="cell"></div>'; 
+        } else if(day>last){ 
+          h+='<div class="cell"></div>'; 
+        } else{
+          const k=ymd(y,m,day);
+          const text=NOTES[k]||"";
+
+          // 🔎 공휴일 / 재량휴업일 판정
+          const isNationalHoliday = baseHolidays.has(k) || extraNationalSet.has(k);
+          const isSchoolOff       = schoolOffSet.has(k);
+
+          let dateClass = "date";
+          if(isNationalHoliday) dateClass += " holiday-national";
+          if(isSchoolOff)       dateClass += " holiday-schooloff";
+
+          const dt=new Date(y,m-1,day);
+          dt.setDate(dt.getDate()-dt.getDay());
+          const wk=ymd(dt.getFullYear(),dt.getMonth()+1,dt.getDate());
+          const link=`/calendar/calendar-weekly-academic.html?start=${wk}&weeks=1`;
+
+          h+=`
+            <div class="cell">
+              <div class="${dateClass}">
+                <a class="date-link" href="${link}">${day}</a>
+              </div>
+              <div class="txt">${text}</div>
+            </div>`;
+          day++;
+        }
+      }
+      h+='</div>';
+    }
+
+    grid.innerHTML=h;
+    root.appendChild(wrap);
+  }
+
+  function renderAll(){
+    const s=ymToDate(START_YM);
+    for(let i=0;i<COUNT;i++){
+      const d=addMonths(s,i);
+      renderMonth(d.getFullYear(),d.getMonth()+1);
+    }
+  }
+
+  // 적용 버튼
+  applyBtn.addEventListener("click",()=>{
+    const ym=startYmInput.value;
+    const c=parseInt(countInput.value,10)||1;
+    if(!ym) return;
+    const p=new URLSearchParams();
+    p.set("start",ym);
+    p.set("months",c);
+    location.search=p.toString();
+  });
+
+  // 설정 열기/접기 (초기: 접힘)
+  let visible=false;
+  toggleBtn.addEventListener("click",()=>{
+    visible=!visible;
+    if(visible){
+      controlsEl.style.display="flex";
+      toggleBtn.textContent="설정 접기";
+    }else{
+      controlsEl.style.display="none";
+      toggleBtn.textContent="설정 열기";
+    }
+  });
+
+  // 초기 실행
+  (async()=>{
+    await loadExtraHolidays();        // 공휴일/재량휴업일 로딩
+    const keys=collectKeys(START_YM,COUNT);
+    await loadNotes(keys);
+    setRangeText();
+    renderAll();
+  })();
+</script>
+
+<script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>

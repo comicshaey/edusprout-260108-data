@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>학교운동부 지도자 수익자부담금 예산 분배기</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <h1>학교운동부 지도자 수익자부담금 예산 분배기</h1>
+      <p class="sub">
+        ·순환함수 발생으로 수치해석으로 근사치 구함.<br/>
+        ·계약서 상 규정: 수익자부담금 보수 지급에 따른 추가적인 발생분에 대한 재원 역시 수익자부담으로 한다.<br/>
+        ·추가발생분: 통상임금 미산입함. (개발자의 근무지 기준)<br/>
+        ·추가발생분에 퇴직연금이랑 연차미사용 수당도 미반영됨. (아래에 항목은 있으나 0원으로 표시되게 함)<br/>
+      </p>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- 입력 영역 -->
+    <section class="card">
+      <h2>1. 기본 정보 입력</h2>
+
+      <div class="grid two">
+        <div>
+          <label for="students">학생 수</label>
+          <input id="students" type="number" min="0" step="1" value="7" />
+          <p class="muted small">예: 7명</p>
+        </div>
+
+        <div>
+          <label for="unitFee">1인당 징수 금액</label>
+          <input id="unitFee" type="number" min="0" step="10000" value="200000" />
+          <p class="muted small">기본: 200,000원</p>
+        </div>
+      </div>
+
+      <!-- 버튼 검정색. btn-primary -->
+      <button class="btn-primary" type="button" onclick="handleCalculate()">
+        계산하기
+      </button>
+
+      <p class="muted small" style="margin-top:6px">
+        ·개발자 소속 학교 기준으로 계산합니다. 
+      </p>
+    </section>
+
+    <!-- 결과 영역 -->
+    <section class="card" style="overflow-x:auto;">
+      <h2>예산 분배 내역 산출 결과</h2>
+      <p id="iterInfo" class="muted small">계산하기 버튼 눌러야 결과 나옴</p>
+
+      <table class="simple-table">
+        <tbody>
+          <tr>
+            <th>수익자부담금 총 징수 금액</th>
+            <td id="totalCollected">0원</td>
+          </tr>
+
+          <tr>
+            <th>국민연금 (개인부담금)</th>
+            <td id="pensionEmp">0원</td>
+          </tr>
+          <tr>
+            <th>국민연금 (기관부담금)</th>
+            <td id="pensionOrg">0원</td>
+          </tr>
+
+          <tr>
+            <th>건강보험 (개인부담금)</th>
+            <td id="healthEmp">0원</td>
+          </tr>
+          <tr>
+            <th>건강보험 (기관부담금)</th>
+            <td id="healthOrg">0원</td>
+          </tr>
+
+          <tr>
+            <th>장기요양보험 (개인부담금)</th>
+            <td id="longtermEmp">0원</td>
+          </tr>
+          <tr>
+            <th>장기요양보험 (기관부담금)</th>
+            <td id="longtermOrg">0원</td>
+          </tr>
+
+          <tr>
+            <th>고용보험 (개인부담금)</th>
+            <td id="employEmp">0원</td>
+          </tr>
+          <tr>
+            <th>고용보험 (기관부담금)</th>
+            <td id="employOrg">0원</td>
+          </tr>
+
+          <tr>
+            <th>산재보험 (기관부담금)</th>
+            <td id="accidentOrg">0원</td>
+          </tr>
+
+          <tr>
+            <th>퇴직연금 적립금 (DC형)</th>
+            <td id="retirement">0원</td>
+          </tr>
+          <tr>
+            <th>연차 미사용 수당 증가분</th>
+            <td id="annualLeave">0원</td>
+          </tr>
+
+          <tr>
+            <th>사회보험료 개인부담금 합계</th>
+            <td id="sumEmp">0원</td>
+          </tr>
+          <tr>
+            <th>사회보험료 기관부담금 합계</th>
+            <td id="sumOrg">0원</td>
+          </tr>
+
+          <tr>
+            <th>각종 공제금액 합계</th>
+            <td id="totalDeductions">0원</td>
+          </tr>
+          <tr>
+            <th>강사 실수령액 (수치해석 근사치)</th>
+            <td id="netPay">0원</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 메모 영역 -->
+    <section class="card">
+      <h2>참고 사항</h2>
+      <p class="muted small">
+        ·공제액과 실수령액이 서로 영향을 주는 순환식을 반복 계산해서 근사치 계산한 값임.<br />
+        ·개발자가 근무 중인 학교 기준으로 만들었음.<br />
+        ·사회보험 요율: 국민연금 9% (기관:개인 1:1)/ 건강보험 7.09% (1:1)/ 장기요양: 건강보험료*12.95% (1:1)/ 고용보험료= 개인 0.9%, 기관 1.75%/ 산재보험 0.966%<br />
+        ·원단위 절삭함.<br />
+      </p>
+    </section>
+
+  <a href="/" class="btn">메인으로 돌아가기</a>
+
+  <footer style="text-align:center; margin-top:15px; color:#444;">
+    제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+  </footer>
+
+    
+  </main>
+  <script src="script.js"></script>
+   <script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>

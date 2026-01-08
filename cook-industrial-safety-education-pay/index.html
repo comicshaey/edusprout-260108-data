@@ -1,0 +1,698 @@
+<!doctype html>
+
+<html lang="ko">
+
+<head>
+
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>조리종사원 산안전보건교육 인건비 계산기</title>
+
+  <link rel="stylesheet" href="/static/style.css">
+
+
+
+
+
+
+
+<style>
+
+    body{
+
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans KR',sans-serif;
+
+      color:#111;
+
+      background:#fff;
+
+      margin:0;
+
+    }
+
+    .wrap{max-width:960px;margin:24px auto;padding:0 16px}
+
+    h1{font-size:1.4rem;margin:8px 0 14px}
+
+    .card{
+
+      border:1px solid #e5e5e5;
+
+      border-radius:16px;
+
+      padding:16px;
+
+      margin:12px 0;
+
+      background:#fff;
+
+    }
+
+
+
+    /* 결과 표 */
+
+    .result{
+
+      margin-top:12px;
+
+      padding:10px 16px;
+
+      background:#f9fafb;
+
+      border-radius:8px;
+
+      font-size:0.9rem;
+
+      overflow-x:auto; /* 스크롤 제거 */
+
+    }
+
+    .result table{
+
+      width:100%;
+
+      box-sizing:border-box;
+
+      border-collapse:separate;
+
+      border-spacing:0;
+
+      font-size:0.9rem;
+
+
+
+      table-layout:fixed; /* 가로폭 고정 */
+
+      word-break:keep-all; /* 줄바꿈 */
+
+    }
+
+    .result th,
+
+    .result td{
+
+      padding:4px 6px;
+
+      text-align:right;
+
+      white-space:normal;  /* 자동 줄바꿈 */
+
+    }
+
+    .result th:first-child,
+
+    .result td:first-child{
+
+      text-align:left;
+
+      padding-left:0;
+
+    }
+
+    .result tr:nth-child(even){background:#f3f4f6}
+
+    .result-strong{font-weight:700;font-size:1rem}
+
+    .note{margin-top:6px;font-size:0.8rem;color:#6b7280}
+
+
+
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+
+    .col{flex:1 1 240px;min-width:240px}
+
+    label{display:block;font-weight:600;margin-bottom:6px}
+
+    select,input[type=number],input[type=date]{
+
+      width:100%;
+
+      padding:10px 12px;
+
+      border:1px solid #d0d0d0;
+
+      border-radius:12px;
+
+      font-size:1rem;
+
+      box-sizing:border-box;
+
+    }
+
+    .allow-row{
+
+      display:grid;
+
+      grid-template-columns:1fr 180px;
+
+      align-items:center;
+
+      gap:10px;
+
+      margin:8px 0;
+
+    }
+
+    .allow-row input{max-width:180px}
+
+    .muted{color:#444;font-size:.92rem}
+
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    .out{font-size:1.1rem;font-weight:700}
+
+    .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+    a.btn,button.btn{
+
+      display:inline-block;
+
+      padding:10px 14px;
+
+      border:1px solid #222;
+
+      border-radius:12px;
+
+      color:#111;
+
+      text-decoration:none;
+
+      font-weight:700;
+
+      background:#fff;
+
+      cursor:pointer;
+
+    }
+
+    footer{text-align:center;margin:24px 0;color:#444}
+
+    .disabled{background:#fafafa;color:#777}
+
+
+
+    /* 산안전보건교육 카드 전용 */
+
+    .sub-title{font-size:1.1rem;margin:0 0 8px}
+
+    .field-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+
+    .field{flex:1 1 200px;min-width:200px}
+
+    .field label{font-size:0.9rem;margin-bottom:4px}
+
+    .field input{
+
+      width:100%;
+
+      padding:7px 9px;
+
+      font-size:0.95rem;
+
+      border:1px solid #ccc;
+
+      border-radius:6px;
+
+      box-sizing:border-box;
+
+    }
+
+    .btn-row{
+
+      margin-top:10px;
+
+      display:flex;
+
+      flex-wrap:wrap;
+
+      gap:8px;
+
+    }
+
+    .btn.small{padding:7px 12px;font-size:0.88rem;border-radius:999px}
+
+    .btn.secondary{background:#f3f4f6;color:#111;border-color:#d1d5db}
+
+
+
+    .inline-toggle{
+
+      display:flex;
+
+      align-items:center;
+
+      gap:6px;
+
+      font-size:0.85rem;
+
+      margin-top:6px;
+
+    }
+
+
+
+    @media (max-width:600px){
+
+      .card{border-radius:12px;padding:14px 12px}
+
+    }
+
+</style>
+
+
+
+
+
+
+
+  
+
+</head>
+
+<body>
+
+
+
+<main class="container" style="max-width:880px; margin:0 auto; padding:24px 16px;">
+
+  <div class="wrap">
+
+    <h1> 산안전보건교육 인건비 계산기 (조리종사원) </h1>
+
+<hr/>
+
+
+
+<!-- ================================ 구분선 ================================ -->
+
+
+
+    <section class="section">
+
+      <h2>사용 방법 안내</h2>
+
+      <p class="muted">
+
+        1. 직종을 선택한다. (해당 수당만 활성화됨) <br/>
+
+        2. 최초 임용일자를 입력한다. (근속연수 자동 산정됨) <br/>
+
+        3. 방학중 집체교육은 기본급+정액급식비만 반영함. 최저시급 보전. <br/>
+
+        4. 온라인 교육은 보통 학기중 초과근무로 함.<br/>
+
+        5. 쨔쟌~ 집체교육 +온라인 교육 인건비 합산 금액이 산정되었습니다. 끝.<br/>
+
+      </p>
+
+    </section>
+
+
+
+<!-- ================================ 구분선 ================================ -->
+
+
+
+    
+
+    <!-- 통상임금 계산 블록 -->
+
+    <div class="card">
+
+      <div class="row">
+
+        <div class="col">
+
+          <label>직종</label>
+
+          <select id="job"></select>
+
+        </div>
+
+        <div class="col">
+
+          <label>통상임금 계산 시점</label>
+
+          <input id="calcDate" type="date" />
+
+        </div>
+
+        <div class="col">
+
+          <label>최초 임용일자</label>
+
+          <input id="startDate" type="date" />
+
+          <div class="muted" id="yearsMode" style="margin-top:6px;"></div>
+
+        </div>
+
+        <div class="col">
+
+          <label>근속연수</label>
+
+          <input id="years" type="number" min="0" step="1" value="0" />
+
+        </div>
+
+      </div>
+
+      <p class="muted">
+
+        ·최초 임용일 및 계산 시점 입력 시 근속연수 자동 계산됨.<br/>
+
+        ·2025.3.1.일자 기준 교육공무직 보수표 참고. 209시간 적용 
+
+      </p>
+
+      <p class="muted">
+
+  ·최초 임용일 및 계산 시점 입력 시 근속연수 자동 계산됨.<br/>
+
+  ·2025.3.1.일자 기준 교육공무직 보수표 참고. 209시간 적용 
+
+  <span id="note"></span>
+
+      </p>
+
+      <div class="btns">
+
+        <button class="btn" id="resetBtn" type="button">입력값 초기화</button>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="card">
+
+      <h2 style="font-size:1.1rem;margin:0 0 10px">임금 적용 수당</h2>
+
+      <div id="allowBox"></div>
+
+    </div>
+
+
+
+    <div class="card grid2">
+
+      <div>
+
+        <div class="muted">기본급</div>
+
+        <div class="out" id="outBase">-</div>
+
+      </div>
+
+      <div>
+
+        <div class="muted">근속수당</div>
+
+        <div class="out" id="outTenure">-</div>
+
+      </div>
+
+      <div>
+
+        <div class="muted">합계</div>
+
+        <div class="out" id="outSum">-</div>
+
+      </div>
+
+      <div>
+
+        <div class="muted">통상임금</div>
+
+        <div class="out" id="outHourly">-</div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- 1. 방학 중 집체교육 -->
+
+    <div class="card">
+
+      <h2 class="sub-title">1. 방학 중 집체교육 (최저임금 보전)</h2>
+
+      <p class="muted">
+
+        ·공무직 보수 업무편람 참고. 방학 중 집체교육은 기본급과 정액급식비만 반영.<br/>
+
+        ·월 보수 → 일단위 보수 → 시간단위 보수 계산 후 교육시간 비례 산정함.<br/>
+
+        ·비례 산정한 금액이 최저시급보다 적으면 차액 보전함. (사실상 방학중 집체교육은 최저시급으로 지급하면 된다고 생각하면 됨)
+
+      </p>
+
+
+
+      <div class="inline-toggle">
+
+        <input type="checkbox" id="vacAuto" checked />
+
+        <label for="vacAuto">선택한 직종 기준 기본급·정액급식비 자동 불러오기</label>
+
+      </div>
+
+
+
+      <div class="field-row">
+
+        <div class="field">
+
+          <label for="vacBasic">기본급</label>
+
+          <input id="vacBasic" type="number" placeholder="예: 2,069,600" />
+
+        </div>
+
+        <div class="field">
+
+          <label for="vacMeal">정액급식비</label>
+
+          <input id="vacMeal" type="number" value="150000" />
+
+        </div>
+
+      </div>
+
+
+
+      <div class="field-row">
+
+        <div class="field">
+
+          <label for="vacDays">달력상 일수 (해당월)</label>
+
+          <input id="vacDays" type="number" value="31" />
+
+        </div>
+
+        <div class="field">
+
+          <label for="vacEduHours">교육시간</label>
+
+          <input id="vacEduHours" type="number" step="0.5" value="6" />
+
+        </div>
+
+      </div>
+
+
+
+      <div class="field-row">
+
+        <div class="field">
+
+          <label for="vacMinWage">해당 연도 최저시급</label>
+
+          <input id="vacMinWage" type="number" value="10030" />
+
+        </div>
+
+      </div>
+
+
+
+      <div class="btn-row">
+
+        <button type="button" class="btn small" id="vacCalcBtn">계산하기</button>
+
+        <button type="button" class="btn small secondary" id="vacResetBtn">초기화</button>
+
+      </div>
+
+
+
+      <div id="vacResult" class="result" style="display:none;"></div>
+
+
+
+      <p class="note">
+
+        ·원단위 절삭
+
+      </p>
+
+    </div>
+
+
+
+    <!-- 2. 학기 중 주말 온라인 교육 -->
+
+    <div class="card">
+
+      <h2 class="sub-title">2. 학기 중 주말 온라인 교육</h2>
+
+      <p class="muted">
+
+        ·보통 일요일에 초과근무로 온라인 교육 들어서 통상임금에 법외 1.5배 가산됨.<br/>
+
+      </p>
+
+
+
+      <div class="inline-toggle">
+
+        <input type="checkbox" id="eduUseManual" />
+
+        <label for="eduUseManual">시간당 임금 직접 입력</label>
+
+      </div>
+
+
+
+      <div class="field-row">
+
+        <div class="field">
+
+          <label for="eduManualHourly">시간당 임금 직접 입력 (선택사항)</label>
+
+          <input id="eduManualHourly" type="number" placeholder="예: 15,000" disabled />
+
+        </div>
+
+        <div class="field">
+
+          <label for="eduMultiplier">법외 연장근로 가산배율</label>
+
+          <input id="eduMultiplier" type="number" step="0.1" value="1.5" />
+
+        </div>
+
+        <div class="field">
+
+          <label for="eduHours">교육시간</label>
+
+          <input id="eduHours" type="number" step="0.5" value="6" />
+
+        </div>
+
+      </div>
+
+
+
+      <div class="grid2" style="margin-top:12px">
+
+        <div>
+
+          <div class="muted">통상임금 (시급 직접 입력 가능)</div>
+
+          <div class="out" id="outEduBaseHourly">-</div>
+
+        </div>
+
+        <div>
+
+          <div class="muted">초과근무수당 (법외 1.5배 가산 적용)</div>
+
+          <div class="out" id="outEduOverHourly">-</div>
+
+        </div>
+
+        <div>
+
+          <div class="muted">온라인 교육 인건비 총 지급액</div>
+
+          <div class="out" id="outEduAmount">-</div>
+
+        </div>
+
+      </div>
+
+
+
+      <p class="note">
+
+        ·직종 및 수당 입력 후 통상임금 값이 0이 아니면 정상 작동.<br/>
+
+        ·주휴수당 성립 여부 귀찮아서 안 함
+
+      </p>
+
+    </div>
+
+
+
+
+
+    <!-- 3. 최종 합계 -->
+    
+<div class="card" id="finalCard">
+  <h2 class="sub-title">인건비 총 지급액 (집체+온라인)</h2>
+
+  <div class="grid2" style="margin-top:12px">
+    <div>
+      <div class="muted">방학 중 집체교육 인건비</div>
+      <div class="out" id="outVacFinal">-</div>
+    </div>
+    
+    <div>
+      <div class="muted">학기 중 온라인 교육 인건비</div>
+      <div class="out" id="outOnlineFinal">-</div>
+    </div>
+
+    <div style="grid-column:1/3; margin-top:10px; padding-top:14px; border-top:1px solid #e5e5e5;">
+      <div class="muted">최종 지급액</div>
+      <div class="out" id="outTotalFinal" style="font-size:1.4rem; font-weight:800">-</div>
+    </div>
+  </div>
+
+  <p class="note">·각 항목 계산이 완료되면 자동 합산됨</p>
+</div>
+
+
+    <div class="btns">
+      <a class="btn" href="/">메인으로 돌아가기</a>
+    </div>
+  </div>
+
+
+  <footer style="text-align:center; margin-top:15px; color:#444;">
+  제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+  </footer>
+
+
+  
+
+  <script src="app.js"></script>
+ <script src="/static/global-loader.js?v=1"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+

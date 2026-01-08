@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>유치원 시간제근무 기간제교원 인건비 소요액 계산기</title>
+  <link rel="icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="/static/disable-copy.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <h1>유치원 시간제근무 기간제교원 인건비 소요액 계산기</h1>
+      <p class="sub">
+        ·학기중 1일 4시간, 방학중 8시간 근무자. (방학중에도 방과후 미운영 기간은 4시간 인건비 지급)<br />
+        ·인건비 일할계산 시 월간 일수 계산에 주말 포함되도록 설정해둠. <br />
+        ·주당 소정 근로시간 학기중 20시간, 방학중 40시간 고정값으로 둠.<br />
+      </p>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <!-- 1. 근무 조건 설정 -->
+    <section class="card">
+      <h2>1. 근무 조건 설정</h2>
+
+      <div class="grid two">
+        <div class="form-row">
+          <label>
+            근로계약 시작일자
+            <input type="date" id="contractStart" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>
+            근로계약 종료일자
+            <input type="date" id="contractEnd" />
+          </label>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top:8px;">
+        ·월간 일수는 달력일수로 계산. 주말 및 공휴일 포함.<br/>
+        ·예시: 2025.12.31.일자에 방학식이면 2026.1.1.일자부터 방학 일수로 포함.
+      </p>
+      <p class="hint">
+        ·주당 소정 근로시간: 학기중 4*5=20시간, 방학중 8*5=40시간
+      </p>
+    </section>
+
+    <!-- 2. 호봉 및 기본급 -->
+    <section class="card">
+      <h2>2. 호봉 선택 및 기본급 산출 </h2>
+
+      <div class="grid two">
+        <div class="form-row">
+          <label>
+            호봉 선택
+            <select id="stepSelect">
+              <option value="">호봉을 선택하세요</option>
+              <!-- 1~40호봉 -->
+              <option value="1">1호봉</option>
+              <option value="2">2호봉</option>
+              <option value="3">3호봉</option>
+              <option value="4">4호봉</option>
+              <option value="5">5호봉</option>
+              <option value="6">6호봉</option>
+              <option value="7">7호봉</option>
+              <option value="8">8호봉</option>
+              <option value="9">9호봉</option>
+              <option value="10">10호봉</option>
+              <option value="11">11호봉</option>
+              <option value="12">12호봉</option>
+              <option value="13">13호봉</option>
+              <option value="14">14호봉</option>
+              <option value="15">15호봉</option>
+              <option value="16">16호봉</option>
+              <option value="17">17호봉</option>
+              <option value="18">18호봉</option>
+              <option value="19">19호봉</option>
+              <option value="20">20호봉</option>
+              <option value="21">21호봉</option>
+              <option value="22">22호봉</option>
+              <option value="23">23호봉</option>
+              <option value="24">24호봉</option>
+              <option value="25">25호봉</option>
+              <option value="26">26호봉</option>
+              <option value="27">27호봉</option>
+              <option value="28">28호봉</option>
+              <option value="29">29호봉</option>
+              <option value="30">30호봉</option>
+              <option value="31">31호봉</option>
+              <option value="32">32호봉</option>
+              <option value="33">33호봉</option>
+              <option value="34">34호봉</option>
+              <option value="35">35호봉</option>
+              <option value="36">36호봉</option>
+              <option value="37">37호봉</option>
+              <option value="38">38호봉</option>
+              <option value="39">39호봉</option>
+              <option value="40">40호봉</option>
+            </select>
+          </label>
+          <p class="hint">
+            ·법제처 봉급표 참고<br />
+          </p>
+        </div>
+
+        <div>
+          <div class="form-row">
+            <label>
+              기본급 (8시간 기준)
+              <input type="number" id="basePay8" placeholder="0" />
+            </label>
+            <p class="hint">호봉 선택 시 자동 입력. 필요시 수동 입력 가능</p>
+          </div>
+          <div class="grid two">
+            <div class="form-row">
+              <label>
+                학기 중 기본급 (4시간 기준)
+                <input type="number" id="basePay4Sem" disabled />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                방학 중 기본급 (8시간 기준)
+                <input type="number" id="basePay8Vac" disabled />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 경력 연수 및 가족 사항 -->
+    <section class="card">
+      <h2>3. 경력 연수 및 가족 사항</h2>
+
+      <div class="grid two">
+        <div class="form-row">
+          <label>
+            환산 총 경력연수
+            <div class="grid two" style="gap:8px; margin-top:4px;">
+              <div>
+                <input type="number" id="careerYears" min="0" step="1" placeholder="0" />
+                <span>년</span>
+              </div>
+              <div>
+                <input type="number" id="careerMonths" min="0" step="1" placeholder="0" />
+                <span>개월</span>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <input type="number" id="careerDays" min="0" step="1" placeholder="0" style="max-width:100px;" />
+              <span>일</span>
+            </div>
+          </label>
+          <p class="hint">
+            ·예: 9년 10개월 14일이면 그대로 입력. (교원연구비·정근수당 등 근무연수 기준 판단용)
+          </p>
+        </div>
+
+        <div>
+          <div class="form-row">
+            <span class="label">배우자 유무 (가족수당)</span>
+            <div style="margin-top:4px;">
+              <label style="margin-right:8px;">
+                <input type="radio" name="spouseFlag" value="N" checked />
+                없음
+              </label>
+              <label>
+                <input type="radio" name="spouseFlag" value="Y" />
+                있음
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>자녀 가족수당 지급 여부</label>
+            <div class="child-row" style="margin-top:6px; font-size:0.95rem;">
+              <div style="margin-bottom:4px;">
+                첫째 자녀:
+                <label style="margin-left:6px; margin-right:4px;">
+                  <input type="radio" name="firstChildFlag" value="N" checked /> 부양가족 아님
+                </label>
+                <label>
+                  <input type="radio" name="firstChildFlag" value="Y" /> 수당 지급
+                </label>
+              </div>
+              <div style="margin-bottom:4px;">
+                둘째 자녀:
+                <label style="margin-left:6px; margin-right:4px;">
+                  <input type="radio" name="secondChildFlag" value="N" checked /> 부양가족 아님
+                </label>
+                <label>
+                  <input type="radio" name="secondChildFlag" value="Y" /> 수당 지급
+                </label>
+              </div>
+              <div>
+                셋째 이상 자녀:
+                <label style="margin-left:6px; margin-right:4px;">
+                  <input type="radio" name="thirdChildFlag" value="N" checked /> 부양가족 아님
+                </label>
+                <label style="margin-right:6px;">
+                  <input type="radio" name="thirdChildFlag" value="Y" /> 수당 지급
+                </label>
+                <span>
+                  (수당 받는 셋째 이상 자녀 인원수:
+                  <input type="number" id="childThirdCount" min="0" step="1" value="0" style="max-width:80px;" /> 명)
+                </span>
+              </div>
+            </div>
+            <p class="hint" style="margin-top:4px;">
+              ·첫째 자녀 50,000원 / 둘째 자녀 80,000원 / 셋째 이상 120,000원. 공무원 보수 편람 참고
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="stepBaseBtn">1단계: 호봉·경력·가족 수당 반영</button>
+      <p class="hint" style="margin-top:4px;">
+        ·호봉·경력·배우자·자녀 정보 입력 후 1단계를 누르면 기본급(4/8시간)과 교직수당·정액급식비·교원연구비·가족수당이 자동 반영됨 <br/>
+        ·정근수당 가산금은 수기입력
+      </p>
+    </section>
+
+    <!-- 4. 월별 지급 수당 -->
+    <section class="card">
+      <h2>4. 월별 지급 수당</h2>
+      <p class="hint">
+        ·매월 정기적으로 지급되는 수당<br/>
+        ·교직수당·정액급식비·교원연구비·가족수당은 자동계산 가능<br/>
+        ·<b>정근수당 가산금은 자동 계산하지 않고 수기 입력</b>
+      </p>
+
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>항목명</th>
+              <th>학기 중 월액 (4시간 기준)</th>
+              <th>방학 중 월액 (8시간 기준)</th>
+            </tr>
+          </thead>
+          <tbody id="allowanceBody">
+            <tr class="allowance-row">
+              <td><input type="text" class="allow-name" value="교직수당" /></td>
+              <td><input type="number" class="allow-semester" placeholder="0" /></td>
+              <td><input type="number" class="allow-vacation" placeholder="0" /></td>
+            </tr>
+            <tr class="allowance-row">
+              <td><input type="text" class="allow-name" value="교원연구비" /></td>
+              <td><input type="number" class="allow-semester" placeholder="0" /></td>
+              <td><input type="number" class="allow-vacation" placeholder="0" /></td>
+            </tr>
+            <tr class="allowance-row">
+              <td><input type="text" class="allow-name" value="정근수당 가산금" /></td>
+              <td><input type="number" class="allow-semester" placeholder="0" /></td>
+              <td><input type="number" class="allow-vacation" placeholder="0" /></td>
+            </tr>
+            <tr class="allowance-row">
+              <td><input type="text" class="allow-name" value="정액급식비" /></td>
+              <td><input type="number" class="allow-semester" placeholder="0" /></td>
+              <td><input type="number" class="allow-vacation" placeholder="0" /></td>
+            </tr>
+            <tr class="allowance-row">
+              <td><input type="text" class="allow-name" value="가족수당" /></td>
+              <td><input type="number" class="allow-semester" placeholder="0" /></td>
+              <td><input type="number" class="allow-vacation" placeholder="0" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn" id="applyAllowBtn">월별 수당 자동 채우기</button>
+        <button type="button" class="btn" id="addAllowBtn">행 추가</button>
+      </div>
+    </section>
+
+    <!-- 5. 연 단위 수당 -->
+    <section class="card">
+      <h2>5. 연 단위 지급 수당 </h2>
+      <p class="hint">
+        ·정근수당·명절휴가비·정기상여금 등<br />
+        ·계약기간에 해당하는 총액 입력하면 월별로 배분함.
+      </p>
+
+      <div class="form-row">
+        <label>
+          정근수당 연간 기준액 (정상근무 기준)
+          <input type="number" id="longevityBaseAnnual" placeholder="0" />
+        </label>
+        <p class="hint">
+          ·업무편람 기준 “정근수당 연간 기준액(정상근무 1년분)” 입력.<br/>
+          ·학사일정(월별 일수)을 반영해 계약기간에 해당하는 일할계산 금액을 자동 산출.
+        </p>
+      </div>
+
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>항목명</th>
+              <th>연 단위 금액 (계약기간 총액)</th>
+            </tr>
+          </thead>
+          <tbody id="annualBody">
+            <tr class="annual-row">
+              <td><input type="text" class="annual-name" value="정근수당" /></td>
+              <td><input type="number" class="annual-amount" placeholder="0" /></td>
+            </tr>
+            <tr class="annual-row">
+              <td><input type="text" class="annual-name" value="명절휴가비" /></td>
+              <td><input type="number" class="annual-amount" placeholder="0" /></td>
+            </tr>
+            <tr class="annual-row">
+              <td><input type="text" class="annual-name" value="정기상여금" /></td>
+              <td><input type="number" class="annual-amount" placeholder="0" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn" id="calcLongevityBtn">정근수당 일할계산</button>
+        <button type="button" class="btn" id="addAnnualBtn">행 추가</button>
+      </div>
+    </section>
+
+    <!-- 6. 방학·미운영 기간 설정 -->
+    <section class="card">
+      <h2>6. 방학기간 및 방과후과정 미운영 기간 설정</h2>
+      <p class="hint">
+        ·여러 구간 선택 가능함.
+      </p>
+
+      <h3 style="font-size:15px;margin:8px 0 6px;">방학 기간 (8시간 근무)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>시작일자</th>
+              <th>종료일자</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody id="vacationBody">
+            <tr class="vac-row">
+              <td><input type="date" class="vac-start" /></td>
+              <td><input type="date" class="vac-end" /></td>
+              <td><input type="text" class="vac-note" placeholder="예: 여름방학" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button type="button" class="btn" id="addVacBtn">행 추가</button>
+
+      <h3 style="font-size:15px;margin:18px 0 6px;">방학 중 방과후 미운영 기간 (4시간 근무)</h3>
+      <p class="hint">
+        ·방학기간 중 방과후과정 미운영으로 4시간 인건비 지급하는 기간 입력하세요.<br />
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>시작일자</th>
+              <th>종료일자</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody id="noAfBody">
+            <tr class="noaf-row">
+              <td><input type="date" class="noaf-start" /></td>
+              <td><input type="date" class="noaf-end" /></td>
+              <td><input type="text" class="noaf-note" placeholder="예: 여름방학 중 방과후 미운영기간" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button type="button" class="btn" id="addNoAfBtn">행 추가</button>
+    </section>
+
+    <!-- 7. 월별 근무(달력) 일수 자동 계산 -->
+    <section class="card">
+      <h2>7. 월별 학기중·방학·미운영 일수 자동 계산</h2>
+      <p class="hint">
+        ·계약기간 동안 각 월별 인건비 지급 일수 계산함. 수동 입력 가능.
+      </p>
+      <button type="button" class="btn" id="buildMonthBtn">2단계: 월별 일수 계산하기</button>
+      <p id="monthError" class="error"></p>
+
+      <div id="monthTableWrap" style="margin-top:10px;"></div>
+    </section>
+
+    <!-- 8. 월별 인건비 계산 -->
+    <section class="card">
+      <h2>8. 월별 인건비 및 기관부담금 계산</h2>
+      <p class="hint">
+        ·월별 인건비 일할계산 포함해서 산출함. 
+      </p>
+      <button type="button" class="btn" id="calcBtn">3단계: 인건비 및 퇴직금 계산하기</button>
+      <p id="calcError" class="error"></p>
+
+      <div id="resultWrap" style="margin-top:10px;"></div>
+    </section>
+
+    <!-- 9. 직종별 구비서류 안내 -->
+    <section class="card">
+      <h2>9. 직종별 구비서류 안내</h2>
+      <p class="hint">
+        ·2025 **도교육청 계약제교원 운영 지침 기준 요약.<br/>
+        ·실제 공고 시 제시되는 서류 목록과 차이가 있으면 공고문을 우선.
+      </p>
+
+      <div class="form-row">
+        <label>
+          채용 유형 선택
+          <select id="docTypeSelect">
+            <option value="time-part">시간제근무 기간제교원(일반)</option>
+            <option value="retired">퇴직교원(1년 이내) 재채용</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="docGuide" class="doc-guide" style="margin-top:8px;"></div>
+    </section>
+
+    <a class="btn" href="/index.html">메인으로 돌아가기</a>
+  </main>
+
+  <footer style="text-align:center; margin-top:15px; color:#444;">
+    제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+  </footer>
+
+
+  <script src="/static/teacher-step-core.js?v=251120"></script>
+  <script src="script.js?v=25112102"></script>
+    <script src="/static/global-loader.js?v=1"></script>
+</body>
+</html>
+
+
+
+

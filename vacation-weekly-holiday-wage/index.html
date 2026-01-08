@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>방학중 비상시근로자 방학근무 인건비 계산기 (주휴수당)</title>
+  <link rel="stylesheet" href="/static/style.css" />
+
+  <!-- 이 페이지 전용 결과 레이아웃 -->
+  <style>
+    .result-grid{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .result-block{
+      border-top:1px solid #eee;
+      padding-top:10px;
+      margin-top:4px;
+    }
+    .result-block:first-of-type{
+      border-top:none;
+      padding-top:0;
+    }
+    .result-title{
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .result-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:12px;
+      margin:2px 0;
+    }
+    .result-label{
+      font-weight:600;
+    }
+    .result-value{
+      min-width:120px;
+      text-align:right;
+    }
+    .result-help{
+      font-size:0.85rem;
+      color:#555;
+      margin-top:2px;
+    }
+    .result-total{
+      font-size:1.1rem;
+      font-weight:700;
+      text-align:right;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container" style="max-width:880px; margin:0 auto; padding:24px 16px;">
+
+  <header class="site-header">
+    <div class="shell">
+      <h1>조리종사원 및 청소원 방학근무 인건비 일할 계산기</h1>
+
+      <p class="muted"> 
+        ·조리종사원 급식소 청소 인건비 및 청소원 방학중 근무 일할계산 급여 계산기 <br/>
+        ·산업안전보건교육 인건비 계산기는 별도 페이지에 있음 <br/>
+      </p>
+    </div>
+  </header>
+
+    <!-- ================================ 구분선 ================================ -->
+
+    <section class="section">
+      <h2>사용 방법 안내</h2>
+      <p class="muted">
+        1. 직종을 선택한다. 조리종사원(교육공무직) 또는 청소원(특수운영직군). 방학 중 유급주휴일수가 달라서 이후에 선택해야함.<br/>
+        2. 방학 일정을 입력한다. 입력하면 해당 기간 동안 실근무일 체크할 수 있는 목록이 나타남. <br/>
+        3. 실제 근무한 날에 체크하면 유급 근로시간 입력 칸이 활성화됨. <br/>
+        4. 달력 일수에서 토요일 일수를 제외한 근무일수를 입력한다.<br/>
+        5. 계산하기 버튼을 누른다.
+        6. 쨔쟌~      
+      </p>
+
+      아이씨 귀찮아 계산 결과 나중에 고치겠음 <br/>
+      아니다, 고쳤음<br/>
+      
+    </section>
+
+<!-- ================================ 구분선 ================================ -->
+
+    <!-- 기본 정보 -->
+    <section class="card">
+      <h2> 기본 정보</h2>
+
+      <!-- 직종 -->
+      <div class="form-row">
+        <label for="jobType">직종 구분</label>
+        <select id="jobType">
+          <option value="cook">교육공무직 (조리사)</option>
+          <option value="cook-helper">교육공무직 (조리실무사)</option>
+          <option value="cleaner">특수운영직군 (청소원)</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="card">
+      <!-- 근무 기간 -->
+      <div class="grid two">
+        <div class="form-row">
+          <label for="startDate">방학 시작일자</label>
+          <input type="date" id="startDate" />
+        </div>
+
+        <div class="form-row">
+          <label for="endDate">방학 종료일자</label>
+          <input type="date" id="endDate" />
+        </div>
+      </div>
+
+      <p class="note">
+        방학이 여러 달에 걸칠 경우 토요일 일수가 달라서 월별 일할계산을 위해 구분해둠 
+      </p>
+    </section>
+
+    <!-- 날짜별 근무 선택 -->
+    <section class="card">
+      <h2> 방학 기간 중 근무일자 선택 및 해당 일자 근무시간 입력</h2>
+      <p class="hint">
+        방학 기간 입력하면 화면에 나타남. 근무시간은 휴게시간 제외하고 입력하삼
+      </p>
+
+      <div class="table-wrap" id="daysContainer">
+        <p class="hint" style="padding:10px 12px;">
+          위에서 방학 시작일자 종료일자 먼저 입력하쇼
+        </p>
+      </div>
+    </section>
+
+    <!-- 달별 인건비 · 기준 설정 -->
+    <section class="card">
+      <h2> 월별 인건비 계산 </h2>
+      
+      <p class="muted">
+        ·입력하면 방학기간 동안의 날짜가 쭉 생성됨. 근무일자에만 체크하면 됨.<br/>
+        ·월별 토요일 일수가 달라서 복잡함.
+      </p>
+
+      <div class="table-wrap" id="monthConfigContainer">
+        <p class="hint" style="padding:10px 12px;">
+          방학기간 위에서 설정하면 여기에 월별 설정 행 생성됨.
+        </p>
+      </div>
+
+      <div class="form-row" style="margin-top:10px;">
+        <label for="holidayDaysPerWeek">주휴일 수 (직종 기준)</label>
+        <select id="holidayDaysPerWeek">
+          <option value="2">주말 이틀 다 유급 주휴일 (조리종사원)</option>
+          <option value="1">일요일만 유급 주휴일 (특수운영직군)</option>
+        </select>
+        <p class="hint">
+          방학중 유급 주휴일 간주 여부에 따라 일수 선택하세요. 
+        </p>
+      </div>
+    </section>
+
+    <!-- 인건비 계산 버튼 + 결과 -->
+    <section class="card">
+      <div class="form-row" style="text-align:right; margin-bottom:8px;">
+        <button type="button" class="btn" id="calcBtn">계산하기</button>
+      </div>
+
+      <h2> 인건비 소요액 계산 내역</h2>
+      <p class="hint">
+        계산하기 버튼을 누르면 아래 항목별로 인건비를 계산해서 보여줍니다.
+      </p>
+
+      <div class="result-grid">
+        <!-- 1) 기본 근무 현황 -->
+        <div class="result-block">
+          <div class="result-title">기본 근무 현황</div>
+
+          <div class="result-row">
+            <div class="result-label">총 실근무일수</div>
+            <div class="result-value" id="workingDaysText">-</div>
+          </div>
+
+          <div class="result-row">
+            <div class="result-label">주간 실근로시간</div>
+            <div class="result-value" id="weeklyHoursText">-</div>
+          </div>
+
+          <p class="result-help" id="weeklyHoursHintText">
+            주휴수당 지급 요건 참고: 주당 15시간 이상 근무 시 지급
+          </p>
+        </div>
+
+        <!-- 2) 조리종사원 기준 -->
+        <div class="result-block" id="cookResultBlock">
+          <div class="result-title">조리종사원 기준</div>
+
+          <div class="result-row">
+            <div class="result-label">방학중 근무수당 (조리종사원) 1일 기준</div>
+            <div class="result-value" id="restPerDayText">-</div>
+          </div>
+
+          <div class="result-row">
+            <div class="result-label">방학중 근무수당 합계 (조리종사원)</div>
+            <div class="result-value" id="restTotalText">-</div>
+          </div>
+
+          <p class="result-help" id="restRuleText">
+            4시간 이하 1만원, 4시간 초과 2만원
+          </p>
+
+          <div class="result-row">
+            <div class="result-label">월간 유급 주휴일수 (조리종사원)</div>
+            <div class="result-value" id="holidayDaysText">-</div>
+          </div>
+
+          <div class="result-row">
+            <div class="result-label">주휴수당 1일 기준액 (조리종사원)</div>
+            <div class="result-value" id="holidayPerDayText">-</div>
+          </div>
+
+          <div class="result-row">
+            <div class="result-label">주휴수당 합계 (조리종사원)</div>
+            <div class="result-value" id="holidayTotalText">-</div>
+          </div>
+
+          <p class="result-help" id="holidayCondText">
+            주휴수당 지급 요건 참고용
+          </p>
+          <p class="result-help" id="holidayHintText">
+            여러달 걸쳐있으면 월별 주휴수당 각각 산출 결과 보여드림
+          </p>
+        </div>
+
+        <!-- 3) 청소원 기준 -->
+        <div class="result-block" id="cleanerResultBlock">
+          <div class="result-title">청소원 기준</div>
+
+          <div class="result-row">
+            <div class="result-label">일할계산 인건비 (청소원)</div>
+            <div class="result-value" id="prorataText">-</div>
+          </div>
+
+          <p class="result-help" id="prorataHintText">
+            특수운영직군 청소원 선택 시에만 여기에 나옴
+          </p>
+        </div>
+
+        <!-- 4) 총 인건비 -->
+        <div class="result-block">
+          <div class="result-title">합계</div>
+          <div class="result-row">
+            <div class="result-label">총 인건비</div>
+            <div class="result-total" id="grandTotalText">-</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="note small">
+        편람 등 반영했으나 최종 확인은 본인이…
+      </p>
+    </section>
+
+    <!-- 요약 -->
+    <section class="card">
+      <h2> 반영 규정</h2>
+      <ul class="rule-list">
+        <li>조리사·조리실무사: 교육공무직 업무 편람에서 방학중 비상시근무 직종 규정 적용</li>
+        <li>
+          방학중 근무수당: 근로시간이 4시간 이하이면 10,000원, 4시간 초과이면 20,000원
+        </li>
+        <li>
+          주휴수당 지급 요건: 해당 주에 개근하고 주간 15시간 이상 근무 및 그 다음 주에 근무가 예정되어 있음.
+        </li>
+        <li>
+          청소원은 인건비 일할 계산, 유급 주휴일은 일요일만 해당.
+        </li>
+      </ul>
+    </section>
+
+   <div class="btns">
+      <a class="btn" href="/">메인으로 돌아가기</a>
+   </div>
+
+  </main>
+
+  <footer style="text-align:center; margin-top:15px; color:#444;">
+    제작자: 씩씩하고 귀여운 고주무관 · Contact: edusproutcomics@naver.com · 개인적인 토이 프로젝트입니다.
+  </footer>
+  <script src="/static/global-loader.js?v=1"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
